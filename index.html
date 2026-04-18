@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Správne právo procesné I – Kvíz</title>
+<style>
+  :root {
+    --primary: #818cf8;
+    --primary-dark: #6366f1;
+    --primary-light: #1e1b4b;
+    --success: #4ade80;
+    --success-light: #052e16;
+    --danger: #f87171;
+    --danger-light: #2d0a0a;
+    --warning: #fbbf24;
+    --warning-light: #2d1f00;
+    --bg: #0f172a;
+    --bg2: #1e293b;
+    --card: #1e293b;
+    --card2: #263045;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #334155;
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 24px 16px 60px;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 780px;
+  }
+
+  /* ── HEADER ── */
+  .quiz-header {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 22px 28px 18px;
+    margin-bottom: 18px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.4);
+    border: 1px solid var(--border);
+  }
+  .quiz-header h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 4px;
+  }
+  .quiz-header .sub {
+    font-size: .85rem;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  .progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .progress-track {
+    flex: 1;
+    height: 8px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+    border-radius: 99px;
+    transition: width .4s ease;
+  }
+  .progress-label {
+    font-size: .82rem;
+    color: var(--muted);
+    white-space: nowrap;
+    min-width: 60px;
+    text-align: right;
+  }
+
+  .score-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: 99px;
+    padding: 4px 12px;
+    font-size: .82rem;
+    font-weight: 600;
+    margin-top: 10px;
+    border: 1px solid var(--primary-dark);
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── START SCREEN ── */
+  .start-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 36px 32px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.4);
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+  .start-card h2 { font-size: 1.5rem; margin-bottom: 8px; color: var(--primary); }
+  .start-card p { color: var(--muted); margin-bottom: 28px; line-height: 1.6; }
+
+  .section-label {
+    margin-bottom: 10px;
+    font-weight: 600;
+    font-size: .88rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+
+  .count-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .count-btn {
+    padding: 9px 22px;
+    border-radius: 99px;
+    border: 2px solid var(--border);
+    background: var(--bg2);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: .9rem;
+    color: var(--muted);
+    transition: all .2s;
+  }
+  .count-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .count-btn.selected {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-light);
+  }
+
+  /* ── QUESTION CARD ── */
+  .question-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 30px 28px 24px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.4);
+    margin-bottom: 18px;
+    border: 1px solid var(--border);
+  }
+  .q-number {
+    font-size: .8rem;
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 10px;
+  }
+  .q-text {
+    font-size: 1.08rem;
+    font-weight: 600;
+    line-height: 1.55;
+    margin-bottom: 24px;
+    color: var(--text);
+  }
+
+  .options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all .2s;
+    user-select: none;
+    background: var(--bg2);
+  }
+  .option-item:hover { border-color: var(--primary); background: var(--primary-light); }
+  .option-item.checked { border-color: var(--primary); background: var(--primary-light); }
+
+  .option-item input[type=checkbox] {
+    width: 18px; height: 18px;
+    accent-color: var(--primary);
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .option-text { font-size: .95rem; line-height: 1.5; color: var(--text); }
+
+  .option-item.correct-ans {
+    border-color: var(--success) !important;
+    background: var(--success-light) !important;
+  }
+  .option-item.wrong-ans {
+    border-color: var(--danger) !important;
+    background: var(--danger-light) !important;
+  }
+  .option-item.missed-ans {
+    border-color: var(--warning) !important;
+    background: var(--warning-light) !important;
+  }
+  .option-item.disabled { cursor: default; pointer-events: none; }
+
+  .feedback-row {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    margin-top: 18px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: .92rem;
+  }
+  .feedback-row.correct { background: var(--success-light); color: var(--success); border: 1px solid var(--success); }
+  .feedback-row.wrong { background: var(--danger-light); color: var(--danger); border: 1px solid var(--danger); }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 26px;
+    border-radius: 99px;
+    border: none;
+    font-weight: 700;
+    font-size: .95rem;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .btn-primary {
+    background: var(--primary-dark);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--primary); }
+  .btn-primary:disabled { opacity: .3; cursor: default; }
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary-dark);
+    color: var(--primary);
+  }
+  .btn-outline:hover { background: var(--primary-light); }
+  .btn-outline:disabled { opacity: .3; cursor: default; }
+
+  .btn-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  /* ── RESULT SCREEN ── */
+  .result-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 40px 32px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.4);
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+  .result-emoji { font-size: 3.5rem; margin-bottom: 12px; }
+  .result-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; color: var(--text); }
+  .result-sub { color: var(--muted); margin-bottom: 28px; font-size: .95rem; }
+
+  .stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .stat-box {
+    background: var(--bg2);
+    border-radius: 12px;
+    padding: 16px 24px;
+    min-width: 110px;
+    border: 1px solid var(--border);
+  }
+  .stat-num { font-size: 2rem; font-weight: 800; }
+  .stat-lbl { font-size: .78rem; color: var(--muted); margin-top: 2px; }
+  .stat-box.s-correct .stat-num { color: var(--success); }
+  .stat-box.s-wrong .stat-num { color: var(--danger); }
+  .stat-box.s-total .stat-num { color: var(--primary); }
+
+  .percent-ring {
+    width: 130px;
+    height: 130px;
+    margin: 0 auto 24px;
+    position: relative;
+  }
+  .percent-ring svg { transform: rotate(-90deg); }
+  .percent-ring .ring-bg { fill: none; stroke: var(--border); stroke-width: 10; }
+  .percent-ring .ring-fill { fill: none; stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset .8s ease; }
+  .percent-ring .ring-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  .result-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+  .result-actions .btn { min-width: 260px; justify-content: center; }
+
+  /* wrong list */
+  .wrong-list {
+    margin-top: 32px;
+    text-align: left;
+  }
+  .wrong-list h3 {
+    font-size: 1rem;
+    color: var(--danger);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--danger-light);
+  }
+  .wrong-item {
+    background: var(--bg2);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    font-size: .87rem;
+    line-height: 1.6;
+    border: 1px solid var(--border);
+  }
+  .wrong-item strong { display: block; margin-bottom: 4px; color: var(--text); }
+  .wi-correct { color: var(--success); font-weight: 600; }
+  .wi-wrong { color: var(--danger); font-weight: 600; }
+
+  @media(max-width:500px){
+    .question-card { padding: 22px 16px 18px; }
+    .start-card { padding: 24px 16px; }
+    .result-card { padding: 28px 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="quiz-header">
+    <h1>⚖️ Správne právo procesné I</h1>
+    <div class="sub">Kvíz na zápočet – zaškrtni pravdivé tvrdenia (môže byť jedno, oboje alebo žiadne)</div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-label" id="progressLabel">0 / 0</div>
+    </div>
+    <div class="score-badge" id="scoreBadge">⭐ Skóre: 0</div>
+  </div>
+
+  <!-- START SCREEN -->
+  <div class="screen active" id="screenStart">
+    <div class="start-card">
+      <h2>Vyber režim kvízu</h2>
+      <p>Každá otázka má dve tvrdenia. Body získaš iba vtedy, ak správne zaškrtneš <em>aj</em> nepravdivé <em>aj</em> pravdivé tvrdenia – všetko alebo nič.</p>
+
+      <div class="section-label">Počet otázok</div>
+      <div class="count-row">
+        <button class="count-btn" data-count="15" onclick="selectCount(this)">15</button>
+        <button class="count-btn" data-count="30" onclick="selectCount(this)">30</button>
+        <button class="count-btn selected" data-count="40" onclick="selectCount(this)">40</button>
+        <button class="count-btn" data-count="60" onclick="selectCount(this)">60</button>
+        <button class="count-btn" data-count="all" onclick="selectCount(this)">Všetky</button>
+      </div>
+
+      <button class="btn btn-primary" onclick="startQuiz()" style="font-size:1rem;padding:13px 40px">
+        🚀 Spustiť kvíz
+      </button>
+    </div>
+  </div>
+
+  <!-- QUESTION SCREEN -->
+  <div class="screen" id="screenQuestion">
+    <div class="question-card">
+      <div class="q-number" id="qNumber">Otázka 1 z 40</div>
+      <div class="q-text" id="qText"></div>
+      <div class="options-list" id="optionsList"></div>
+      <div class="feedback-row" id="feedbackRow"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="skipQuestion()">⏭ Preskočiť</button>
+      <button class="btn btn-primary" id="btnConfirm" onclick="confirmAnswer()">✔ Potvrdiť</button>
+      <button class="btn btn-primary" id="btnNext" onclick="nextQuestion()" style="display:none">Ďalej →</button>
+    </div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div class="screen" id="screenResult">
+    <div class="result-card">
+      <div class="result-emoji" id="resultEmoji">🎉</div>
+      <div class="result-title" id="resultTitle">Výsledok</div>
+      <div class="result-sub" id="resultSub"></div>
+
+      <div class="percent-ring">
+        <svg viewBox="0 0 100 100" width="130" height="130">
+          <circle class="ring-bg" cx="50" cy="50" r="45"/>
+          <circle class="ring-fill" id="ringFill" cx="50" cy="50" r="45"
+            stroke-dasharray="282.7"
+            stroke-dashoffset="282.7"/>
+        </svg>
+        <div class="ring-text" id="ringText">0%</div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-box s-total">
+          <div class="stat-num" id="statTotal">0</div>
+          <div class="stat-lbl">Celkom otázok</div>
+        </div>
+        <div class="stat-box s-correct">
+          <div class="stat-num" id="statCorrect">0</div>
+          <div class="stat-lbl">Správne</div>
+        </div>
+        <div class="stat-box s-wrong">
+          <div class="stat-num" id="statWrong">0</div>
+          <div class="stat-lbl">Chybné</div>
+        </div>
+      </div>
+
+      <div class="result-actions">
+        <button class="btn btn-primary" onclick="restartAll()">🔄 Zopakovať celý test</button>
+        <button class="btn btn-outline" onclick="restartWrong()" id="btnWrongOnly">🔁 Zopakovať len chybné</button>
+        <button class="btn btn-outline" onclick="goToStart()">⚙️ Zmeniť nastavenia</button>
+      </div>
+
+      <div class="wrong-list" id="wrongList"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const ALL_QUESTIONS = [
+  ["Ustanovenia správneho poriadku, ktoré sa týkajú prvostupňového konania, sa vzťahujú aj na",
+    ["konanie o preskúmaní rozhodnutia", true],
+    ["konanie o výkone rozhodnutia", true]],
+
+  ["Správne konanie môže začať",
+    ["ex offo alebo na návrh", true],
+    ["aj oboma uvedenými spôsobmi", true]],
+
+  ["Ak sa správne konanie začína ex offo, takéto konanie je začaté dňom, kedy",
+    ["návrh dôjde správnemu orgánu", false],
+    ["návrh dôjde príslušnému správnemu orgánu", false]],
+
+  ["Medzi procesné inštitúty slúžiace na zabezpečenie priebehu a účelu správneho konania patrí",
+    ["poriadkové opatrenia", true],
+    ["dokazovanie", false]],
+
+  ["Formou priameho vynútenia povinnosti sú/je",
+    ["poriadkové opatrenia", false],
+    ["predvedenie", true]],
+
+  ["Predvolať možno",
+    ["len účastníka a svedka", false],
+    ["kohokoľvek, koho osobná účasť je nevyhnutná", true]],
+
+  ["Predviesť možno",
+    ["len účastníka a svedka", true],
+    ["kohokoľvek, koho osobná účasť je nevyhnutná", false]],
+
+  ["Ak bol účastník raz predvolaný",
+    ["možno mu uložiť poriadkovú pokutu", true],
+    ["možno ho predviesť", false]],
+
+  ["Podstatou predbežného opatrenia môže byť",
+    ["stabilizácia pomerov medzi účastníkmi", true],
+    ["zabezpečenie prítomnosti určitej osoby", false]],
+
+  ["Dožiadaný správny orgán môže",
+    ["vydať rozhodnutie", false],
+    ["vykonať konkrétny úkon na účely správneho konania", true]],
+
+  ["Účastník konania môže",
+    ["navrhovať, prípadne aj obstarávať dôkazné prostriedky", true],
+    ["aj vykonávať dôkazné prostriedky", false]],
+
+  ["Medzi dôkazné prostriedky radíme",
+    ["čestné vyhlásenia", false],
+    ["SMSky, maily", true]],
+
+  ["Svedok musí byť",
+    ["schopný vnímať určité javy/predmety a reprodukovať ich", true],
+    ["plne spôsobilý na právne úkony", false]],
+
+  ["Znalcom v konkrétnom konaní môže byť",
+    ["zapísaný znalecký ústav alebo zapísaná znalecká organizácia", true],
+    ["aj nezapísaný odborník", true]],
+
+  ["Predmetom obhliadky môže byť",
+    ["nehnuteľnosť", true],
+    ["listina", true]],
+
+  ["Ak sa v konaní vyskytne trvalo neodstrániteľná prekážka, konanie musí byť",
+    ["prerušené", false],
+    ["zastavené", true]],
+
+  ["Správne konanie môže skončiť",
+    ["vydaním rozhodnutia / schválením zmieru", true],
+    ["jeho zastavením", true]],
+
+  ["Meritórnym rozhodnutím je rozhodnutie vo veci samej – napr.",
+    ["stavebné povolenie", true],
+    ["rozhodnutie o vylúčení zamestnanca správneho orgánu", false]],
+
+  ["Lehoty na rozhodnutie",
+    ["štandardná lehota je 45 dní", false],
+    ["vo zvlášť zložitých prípadoch správny orgán rozhodne do 90 dní", false]],
+
+  ["Za nečinnosť správneho orgánu sa považuje, ak správny orgán",
+    ["nevydá rozhodnutie", true],
+    ["na základe infožiadosti neposkytne informácie", false]],
+
+  ["Odvolanie a rozklad sú",
+    ["riadne opravné prostriedky", true],
+    ["mimoriadne opravné prostriedky", false]],
+
+  ["Riadne opravné prostriedky",
+    ["v prípade riadneho a včasného uplatnenia má ÚK na prieskum právny nárok", true],
+    ["smerujú proti neprávoplatným rozhodnutiam správnych orgánov", true]],
+
+  ["Medzi mimoriadne opravné prostriedky proti rozhodnutiu správneho orgánu patrí",
+    ["odvolanie, obnova konania a protest prokurátora", false],
+    ["rozklad, preskúmanie mimo odvolacieho konania, protest prokurátora", false]],
+
+  ["V odvolacom konaní podľa správneho poriadku sa uplatňuje",
+    ["apelačný princíp", true],
+    ["kasačný princíp", false]],
+
+  ["Aktívne procesne legitimovaným na podanie odvolania podľa správneho poriadku je",
+    ["iba účastník konania a jeho zástupca", true],
+    ["aj zúčastnená osoba", false]],
+
+  ["Odvolanie v správnom konaní",
+    ["je možné podať iba proti taxatívne vymedzeným rozhodnutiam", false],
+    ["je možné podať zásadne proti každému rozhodnutiu", true]],
+
+  ["Odvolanie v správnom konaní nemožno podať",
+    ["proti rozhodnutiu o prerušení konania", true],
+    ["aj ak sa účastník konania dobrovoľne a výslovne vzdal práva podať odvolanie", true]],
+
+  ["Odvolanie podľa správneho poriadku",
+    ["sa podáva na odvolací orgán", false],
+    ["je potrebné podať v odvolacej lehote 15 dní odo dňa vydania rozhodnutia", false]],
+
+  ["Inštitút autoremedúry znamená",
+    ["odvolanie má odkladný účinok", false],
+    ["o odvolaní bude zásadne rozhodovať odvolací orgán", false]],
+
+  ["Odvolací orgán",
+    ["preskúmava napadnuté rozhodnutie v celom rozsahu", true],
+    ["nemôže napadnuté rozhodnutie zrušiť a vrátiť prvostupňovému orgánu", false]],
+
+  ["Rozklad",
+    ["je mimoriadny opravný prostriedok proti rozhodnutiam ústredného orgánu štátnej správy", false],
+    ["rozhoduje o ňom rozkladová komisia", false]],
+
+  ["Obnova konania",
+    ["môže začať iba na návrh účastníka konania", false],
+    ["prebieha v dvoch štádiách", true]],
+
+  ["Medzi podmienky povolenia alebo nariadenia obnovy konania nepatrí",
+    ["existencia niektorého z dôvodov na obnovu konania", false],
+    ["podanie návrhu / povolenie obnovy v zákonnej subjektívnej a objektívnej lehote", false]],
+
+  ["Medzi podmienky povolenia alebo nariadenia obnovy konania patrí",
+    ["aj neexistencia zákonných dôvodov neprípustnosti obnovy konania", true],
+    ["existencia neprávoplatného rozhodnutia", false]],
+
+  ["Obnovu konania povoľuje alebo nariaďuje",
+    ["vždy iba druhostupňový orgán", false],
+    ["vždy iba prvostupňový orgán", false]],
+
+  ["Preskúmanie rozhodnutia mimo odvolacieho konania",
+    ["sa začína aj na základe dispozičnej zásady", false],
+    ["je potrebné začať najneskôr do troch rokov od právoplatnosti rozhodnutia", true]],
+
+  ["Preskúmanie rozhodnutia mimo odvolacieho konania",
+    ["uskutočňuje zásadne orgán, ktorý napadnuté rozhodnutie vydal", false],
+    ["je zamerané na preskúmanie právnych vád rozhodnutia", true]],
+
+  ["Konanie o proteste prokurátora",
+    ["je upravené v správnom poriadku", false],
+    ["sa začína na návrh účastníka konania", false]],
+
+  ["Protest prokurátora",
+    ["nemá zásadne suspenzívny účinok", true],
+    ["sa podáva aj pre skutkové vady rozhodnutia", false]],
+
+  ["V konaní o proteste je účastníkom konania",
+    ["aj správny orgán, ktorý napadnuté rozhodnutie vydal", false],
+    ["zásadne ten, kto bol alebo mal byť účastníkom pôvodného administratívneho konania", true]],
+
+  ["Správne súdnictvo",
+    ["má svoj ústavný základ", true],
+    ["na niektoré konania sa aplikuje aj Európsky dohovor o ľudských právach", true]],
+
+  ["Zákonná úprava správneho súdnictva je obsiahnutá v",
+    ["Občianskom súdnom poriadku (OSP)", false],
+    ["Správnom súdnom poriadku (SSP)", true]],
+
+  ["Správnym súdnictvom rozumieme",
+    ["súdnu kontrolu zákonnosti správnych aktov", true],
+    ["preskúmavanie správnych aktov", false]],
+
+  ["Správne súdy skúmajú",
+    ["vhodnosť rozhodnutia", false],
+    ["zákonnosť rozhodnutia", false]],
+
+  ["Konanie pred správnym súdom sa riadi",
+    ["princípmi uvedenými v Správnom súdnom poriadku", true],
+    ["aj princípmi, na ktorých spočíva Civilný sporový poriadok", true]],
+
+  ["Správny súdny poriadok upravuje",
+    ["všeobecnú správnu žalobu", true],
+    ["aj žalobu vo veciach správneho trestania", true]],
+
+  ["Pre určenie miestnej príslušnosti je primárne rozhodné sídlo",
+    ["žalovaného orgánu verejnej správy", false],
+    ["orgánu verejnej správy, ktorý rozhodol v prvom stupni", true]],
+
+  ["Konanie pred správnym súdom možno začať",
+    ["ex offo", false],
+    ["na návrh", true]],
+
+  ["Konanie pred správnym súdom je",
+    ["zásadne verejné", true],
+    ["zásadne ústne", false]],
+
+  ["Najvyšší správny súd rozhoduje",
+    ["o všeobecnej správnej žalobe", false],
+    ["v osobitných konaniach, v prípadoch stanovených SSP", true]],
+
+  ["Súdny prieskum rozhodnutí",
+    ["súdnemu prieskumu podliehajú všetky rozhodnutia orgánov verejnej správy", false],
+    ["SSP výslovne stanovuje, aké rozhodnutia správne súdy nepreskúmavajú", true]],
+
+  ["Aktívne procesne legitimovaným môže byť",
+    ["akákoľvek FO/PO", false],
+    ["aj opomenutý účastník – aj prokurátor", true]],
+
+  ["Prokurátor môže",
+    ["podať žalobu proti nečinnosti", true],
+    ["vstúpiť do ktoréhokoľvek konania pred správnym súdom", true]],
+
+  ["Ak žalobu podala FO/PO, pasívne procesne legitimovaným bude OVS, ktorý rozhodol",
+    ["o riadnom opravnom prostriedku / vydal rozhodnutie", true],
+    ["v poslednom stupni", false]],
+
+  ["Ak žalobu podáva FO/PO, lehota na jej podanie je podľa SSP dva mesiace od",
+    ["oznámenia rozhodnutia OVS", true],
+    ["od právoplatnosti rozhodnutia OVS", false]],
+
+  ["V správnej žalobe je potrebné uviesť",
+    ["označenie druhu žaloby", true],
+    ["žalobný návrh = petit", true]],
+
+  ["Rozhodnutie o správnej žalobe – správny súd ju môže",
+    ["rozsudkom zamietnuť", true],
+    ["vyhovieť jej a napadnuté rozhodnutie rozsudkom zrušiť", true]],
+
+  ["Voči rozhodnutiu o správnej žalobe prichádzajú do úvahy nasledovné opravné prostriedky",
+    ["odvolanie", false],
+    ["kasačná sťažnosť aj žaloba na obnovu konania", true]],
+
+  ["Na prejednávanie priestupkov sa vzťahuje ochrana práva na spravodlivý proces podľa Európskeho dohovoru o ĽP",
+    ["za každých okolností", false],
+    ["ak sú naplnené tzv. Engelovské kritériá", true]],
+
+  ["Zákon o priestupkoch upravuje",
+    ["konanie o priestupkoch", true],
+    ["aj hmotnoprávne ustanovenia", true]],
+
+  ["Použitie správneho poriadku je v konaní o priestupkoch",
+    ["vylúčené", false],
+    ["subsidiárne", true]],
+
+  ["Priestupkové konanie",
+    ["najprv prebieha objasňovanie priestupkov, následne ich prejednávanie", true],
+    ["najprv prebieha prejednávanie priestupkov, následne ich objasňovanie", false]],
+
+  ["Na objasňovanie priestupkov",
+    ["sa subsidiárne vzťahuje správny poriadok", false],
+    ["sa ani podporne nevzťahujú ustanovenia správneho poriadku", true]],
+
+  ["Objasňovanie priestupkov vykonávajú",
+    ["správne orgány príslušné prejednať zistené priestupky", true],
+    ["v zákonom vymedzenom rozsahu aj napr. orgány PZ, ZVJS, obecnej polície", true]],
+
+  ["Ak sa pri objasňovaní priestupku zistí, že nie je podozrenie z priestupku",
+    ["SO odloží vec záznamom", true],
+    ["SO uloží vec záznamom", false]],
+
+  ["Ak sa pri objasňovaní priestupku nepodarí zistiť skutočnosti svedčiace o tom, že priestupok spáchala konkrétna osoba",
+    ["SO odloží vec záznamom", false],
+    ["SO uloží vec záznamom", true]],
+
+  ["Ak sa pri objasňovaní priestupku zistí, že ide o trestný čin",
+    ["správny orgán odovzdá vec príslušnému orgánu", true],
+    ["správny orgán postúpi vec príslušnému orgánu", false]],
+
+  ["Ak sa v priebehu prejednania priestupku zistí, že ide o trestný čin",
+    ["správny orgán odovzdá vec príslušnému orgánu", false],
+    ["správny orgán postúpi vec príslušnému orgánu", true]],
+
+  ["Dôvodom na odloženie veci pred začatím konania je",
+    ["litispendencia", true],
+    ["res iudicata", true]],
+
+  ["Ak SO zistí, že ide o res iudicata až po začatí konania",
+    ["vec postúpi", false],
+    ["konanie zastaví", true]],
+
+  ["Prejednávanie priestupkov",
+    ["všetky priestupky možno prejednať ex offo", false],
+    ["nie všetky priestupky možno prejednať ex offo", true]],
+
+  ["SO v konaní o priestupku nariadi ústne pojednávanie",
+    ["ak to vyžaduje povaha veci", false],
+    ["obligatórne", true]],
+
+  ["Ústne pojednávanie",
+    ["nemôže prebehnúť v neprítomnosti obvineného z priestupku", false],
+    ["môže vyústiť do ukončenia veci zmierom s navrhovateľom", true]],
+
+  ["Meritórne rozhodnutie o priestupku je rozhodnutím",
+    ["konštitutívnym", true],
+    ["deklaratórnym", true]],
+
+  ["Voči rozhodnutiu o priestupku sú prípustné nasledovné opravné prostriedky",
+    ["odvolanie alebo zrušenie rozhodnutia", true],
+    ["aj súdny prieskum", true]],
+
+  ["Odvolanie je možné podať aj voči",
+    ["bloku", false],
+    ["rozkazu", false]],
+
+  ["Voči rozkazu je možné podať",
+    ["odvolanie", false],
+    ["odpor", true]],
+
+  ["V blokovom konaní prichádzajú do úvahy nasledovné sankcie",
+    ["pokuta", true],
+    ["napomenutie", false]],
+
+  ["Výkon správnych rozhodnutí",
+    ["je obligatórnou fázou správneho konania", false],
+    ["je upravené v piatej časti správneho poriadku", true]],
+
+  ["Podmienkou na nariadenie núteného výkonu správneho rozhodnutia",
+    ["je aj existencia povinnosti uloženej niektorému z účastníkov konania", true],
+    ["je aj predchádzajúce uloženie paričnej lehoty povinnému", true]],
+
+  ["Podmienkou na nariadenie núteného výkonu správneho rozhodnutia",
+    ["nie je existencia exekučného titulu", false],
+    ["je aj nariadenie núteného výkonu v prekluzívnej dvojročnej lehote", false]],
+
+  ["Podmienkou na nariadenie núteného výkonu správneho rozhodnutia",
+    ["je aj existencia povinného subjektu", true],
+    ["je aj existencia dôvodov neprípustnosti výkonu rozhodnutia", false]],
+
+  ["Vykonateľnosť správneho rozhodnutia",
+    ["je nevyhnutnou podmienkou nariadenia výkonu správneho rozhodnutia", true],
+    ["nastáva výlučne vtedy, ak sa proti nemu nemožno odvolať", false]],
+
+  ["Materiálnou podmienkou vykonateľnosti správneho rozhodnutia",
+    ["je aj dodržanie zákonom predpísaných náležitostí na oznámenie rozhodnutia", false],
+    ["je aj existencia objektívnej možnosti splniť uloženú povinnosť", true]],
+
+  ["Vo vzťahu k začiatku výkonu správneho rozhodnutia sa uplatňuje",
+    ["výlučne zásada dispozitívnosti", false],
+    ["zásada dispozitívnosti alebo zásada oficiality", true]],
+
+  ["Príslušným správnym orgánom na výkon rozhodnutia",
+    ["je zásadne správny orgán, ktorý vo veci rozhodol v prvom stupni", true],
+    ["je zásadne odvolací správny orgán", false]],
+
+  ["Procesným právom povinného vo fáze výkonu rozhodnutia",
+    ["je právo byť notifikovaný o začiatku výkonu rozhodnutia", true],
+    ["nie je podať návrh na odklad výkonu rozhodnutia zo závažných dôvodov", false]],
+
+  ["Upustiť od výkonu správneho rozhodnutia",
+    ["je oprávnený správny orgán len na návrh povinného", false],
+    ["je správny orgán oprávnený len z taxatívne vymedzených dôvodov", true]],
+
+  ["Dôvodom na upustenie od výkonu správneho rozhodnutia",
+    ["je aj zrušenie exekučného titulu, na základe ktorého začal výkon rozhodnutia", true],
+    ["je aj dodatočné splnenie vymáhanej povinnosti", true]],
+
+  ["Exekučný príkaz",
+    ["je inštitút, ktorým sa nariaďuje (konkrétny) výkon rozhodnutia", true],
+    ["doručuje sa výlučne iba povinnému", false]],
+
+  ["Povinnosť správneho orgánu použiť pri výkone rozhodnutia iba prostriedky upravené v správnom poriadku je prejavom",
+    ["zásady legality", true],
+    ["zásady proporcionality", false]],
+
+  ["Medzi spôsoby vymáhania peňažných plnení podľa správneho poriadku patrí",
+    ["zrážky zo mzdy, prikázanie pohľadávky, predaj hnuteľných alebo nehnuteľných vecí", true],
+    ["náhradný výkon, ukladanie peňažných pokút, priame vynútenie povinnosti", false]],
+
+  ["Príkaz na vykonanie zrážok zo mzdy je správny orgán oprávnený doručiť",
+    ["výlučne tomu, kto vypláca povinnému mzdu", false],
+    ["aj tomu, kto vypláca povinnému náhradu za pracovný príjem", true]],
+
+  ["O spôsobe výkonu správnej exekúcie v podobe predaja hnuteľných alebo nehnuteľných vecí platí, že",
+    ["je podrobne upravený v správnom poriadku", false],
+    ["je naň potrebné primerane použiť ustanovenia Exekučného poriadku", true]],
+
+  ["Ak vzhľadom na povahu uloženej nepeňažnej povinnosti je ju povinný uskutočniť na náklad a nebezpečenstvo povinného niekto iný",
+    ["ide o spôsob výkonu exekúcie v podobe prikázania pohľadávky", false],
+    ["ide o spôsob výkonu exekúcie v podobe náhradného výkonu", true]],
+
+  ["Ak náhradný výkon nie je podľa povahy veci možný alebo účelný, vymáha sa plnenie nepeňažnej povinnosti spôsobom",
+    ["postupného ukladania pokút", true],
+    ["priameho vynútenia uloženej povinnosti", false]],
+];
+
+// ═══════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════
+let quizQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let wrongQuestionsThisRun = [];
+let lastWrongPool = [];
+let selectedCount = 40;
+let repeatWrongMode = false;
+
+// ═══════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function selectCount(el) {
+  document.querySelectorAll('.count-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedCount = el.dataset.count === 'all' ? 'all' : parseInt(el.dataset.count);
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function updateProgress() {
+  const total = quizQuestions.length;
+  const done = currentIndex;
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = done + ' / ' + total;
+  document.getElementById('scoreBadge').textContent = '⭐ Skóre: ' + score;
+}
+
+// ═══════════════════════════════════════════════════
+//  START
+// ═══════════════════════════════════════════════════
+function startQuiz() {
+  repeatWrongMode = false;
+  let pool = shuffle(ALL_QUESTIONS);
+  if (selectedCount !== 'all') {
+    pool = pool.slice(0, Math.min(selectedCount, pool.length));
+  }
+  quizQuestions = pool;
+  currentIndex = 0;
+  score = 0;
+  wrongQuestionsThisRun = [];
+  updateProgress();
+  showScreen('screenQuestion');
+  renderQuestion();
+}
+
+function goToStart() {
+  showScreen('screenStart');
+  updateProgress();
+}
+
+function restartAll() {
+  showScreen('screenStart');
+  updateProgress();
+}
+
+function restartWrong() {
+  if (!lastWrongPool.length) return;
+  repeatWrongMode = true;
+  quizQuestions = shuffle(lastWrongPool);
+  currentIndex = 0;
+  score = 0;
+  wrongQuestionsThisRun = [];
+  updateProgress();
+  showScreen('screenQuestion');
+  renderQuestion();
+}
+
+// ═══════════════════════════════════════════════════
+//  RENDER QUESTION
+// ═══════════════════════════════════════════════════
+function renderQuestion() {
+  if (currentIndex >= quizQuestions.length) { showResult(); return; }
+  const q = quizQuestions[currentIndex];
+  document.getElementById('qNumber').textContent =
+    'Otázka ' + (currentIndex + 1) + ' z ' + quizQuestions.length;
+  document.getElementById('qText').textContent = q[0];
+
+  const list = document.getElementById('optionsList');
+  list.innerHTML = '';
+
+  [q[1], q[2]].forEach((opt, idx) => {
+    const item = document.createElement('label');
+    item.className = 'option-item';
+    item.innerHTML = `
+      <input type="checkbox" id="cb${idx}" />
+      <span class="option-text">${opt[0]}</span>`;
+    item.querySelector('input').addEventListener('change', () => {
+      item.classList.toggle('checked', item.querySelector('input').checked);
+    });
+    list.appendChild(item);
+  });
+
+  const fb = document.getElementById('feedbackRow');
+  fb.style.display = 'none';
+  fb.className = 'feedback-row';
+  document.getElementById('btnConfirm').style.display = 'inline-flex';
+  document.getElementById('btnNext').style.display = 'none';
+}
+
+// ═══════════════════════════════════════════════════
+//  CONFIRM
+// ═══════════════════════════════════════════════════
+function confirmAnswer() {
+  const q = quizQuestions[currentIndex];
+  const items = document.querySelectorAll('.option-item');
+  const cb0 = items[0].querySelector('input').checked;
+  const cb1 = items[1].querySelector('input').checked;
+  const correct0 = q[1][1];
+  const correct1 = q[2][1];
+  const isRight = (cb0 === correct0) && (cb1 === correct1);
+
+  items.forEach((item, idx) => {
+    item.classList.add('disabled');
+    const cbChecked = item.querySelector('input').checked;
+    const shouldBe = idx === 0 ? correct0 : correct1;
+    if (cbChecked && shouldBe)       item.classList.add('correct-ans');
+    else if (cbChecked && !shouldBe) item.classList.add('wrong-ans');
+    else if (!cbChecked && shouldBe) item.classList.add('missed-ans');
+  });
+
+  const fb = document.getElementById('feedbackRow');
+  fb.style.display = 'flex';
+  if (isRight) {
+    score++;
+    fb.className = 'feedback-row correct';
+    fb.innerHTML = '✅ Správne! Získavaš bod.';
+  } else {
+    fb.className = 'feedback-row wrong';
+    fb.innerHTML = '❌ Nesprávne. Správne: <strong style="margin-left:6px">' +
+      q[1][0] + ': ' + (correct0 ? '✔' : '✘') + ' | ' +
+      q[2][0] + ': ' + (correct1 ? '✔' : '✘') + '</strong>';
+    wrongQuestionsThisRun.push({ q, userA: cb0, userB: cb1 });
+  }
+
+  document.getElementById('btnConfirm').style.display = 'none';
+  document.getElementById('btnNext').style.display = 'inline-flex';
+  updateProgress();
+}
+
+// ═══════════════════════════════════════════════════
+//  NEXT / SKIP
+// ═══════════════════════════════════════════════════
+function nextQuestion() {
+  currentIndex++;
+  updateProgress();
+  if (currentIndex >= quizQuestions.length) { showResult(); return; }
+  renderQuestion();
+}
+
+function skipQuestion() {
+  wrongQuestionsThisRun.push({ q: quizQuestions[currentIndex], userA: null, userB: null, skipped: true });
+  currentIndex++;
+  updateProgress();
+  if (currentIndex >= quizQuestions.length) { showResult(); return; }
+  renderQuestion();
+}
+
+// ═══════════════════════════════════════════════════
+//  RESULT
+// ═══════════════════════════════════════════════════
+function showResult() {
+  const total = quizQuestions.length;
+  const pct = total ? Math.round((score / total) * 100) : 0;
+
+  lastWrongPool = wrongQuestionsThisRun.map(w => w.q);
+
+  let emoji, title;
+  if (pct >= 90)      { emoji = '🏆'; title = 'Výborne!'; }
+  else if (pct >= 75) { emoji = '🎉'; title = 'Veľmi dobre!'; }
+  else if (pct >= 60) { emoji = '👍'; title = 'Dobre!'; }
+  else if (pct >= 40) { emoji = '📖'; title = 'Treba ešte trochu cvičiť'; }
+  else                { emoji = '💪'; title = 'Nevzdávaj sa, skús znova!'; }
+
+  document.getElementById('resultEmoji').textContent = emoji;
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('resultSub').textContent =
+    'Dosiahol/a si ' + score + ' z ' + total + ' bodov (' + pct + '%)';
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statCorrect').textContent = score;
+  document.getElementById('statWrong').textContent = total - score;
+  document.getElementById('ringText').textContent = pct + '%';
+
+  const ring = document.getElementById('ringFill');
+  const circumference = 282.7;
+  ring.style.strokeDashoffset = circumference - (circumference * pct / 100);
+  ring.style.stroke = pct >= 75 ? '#4ade80' : pct >= 50 ? '#fbbf24' : '#f87171';
+
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('progressLabel').textContent = total + ' / ' + total;
+  document.getElementById('scoreBadge').textContent = '⭐ Skóre: ' + score;
+
+  // zobrazi / skryje tlacidlo "zle"
+  const btnWrong = document.getElementById('btnWrongOnly');
+  btnWrong.style.display = lastWrongPool.length > 0 ? 'inline-flex' : 'none';
+
+  // wrong list
+  const wl = document.getElementById('wrongList');
+  if (wrongQuestionsThisRun.length === 0) {
+    wl.innerHTML = '<p style="color:var(--success);font-weight:700;margin-top:20px;text-align:center">🎯 Všetky otázky správne!</p>';
+  } else {
+    let html = '<h3>❌ Chybné / preskočené otázky (' + wrongQuestionsThisRun.length + ')</h3>';
+    wrongQuestionsThisRun.forEach(({ q, userA, userB, skipped }) => {
+      const c0 = q[1][1], c1 = q[2][1];
+      html += `<div class="wrong-item"><strong>${q[0]}</strong><div>`;
+      if (skipped) {
+        html += `<em style="color:var(--muted)">Preskočená</em>`;
+      } else {
+        const a0cls = (userA === c0) ? 'wi-correct' : 'wi-wrong';
+        const a1cls = (userB === c1) ? 'wi-correct' : 'wi-wrong';
+        html += `<span class="${a0cls}">${userA ? '☑' : '☐'} ${q[1][0]}</span> &nbsp;
+                 <span class="${a1cls}">${userB ? '☑' : '☐'} ${q[2][0]}</span>`;
+      }
+      html += `</div><div style="margin-top:5px;font-size:.82rem;color:var(--success)">
+        ✔ Správne: <strong>${q[1][0]}: ${c0 ? 'ÁNO' : 'NIE'}</strong> | 
+        <strong>${q[2][0]}: ${c1 ? 'ÁNO' : 'NIE'}</strong>
+      </div></div>`;
+    });
+    wl.innerHTML = html;
+  }
+
+  showScreen('screenResult');
+}
+</script>
+</body>
+</html>
