@@ -1,334 +1,268 @@
-
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Správne právo – kvíz</title>
-  <style>
-    :root {
-      --bg: #0f1117; --card: #1a1d27; --card2: #22263a;
-      --accent: #6c8cff; --accent2: #a78bfa;
-      --green: #4ade80; --red: #f87171; --yellow: #fbbf24;
-      --text: #e8eaf6; --muted: #8892b0; --border: #2e3350;
-      --radius: 14px; --shadow: 0 8px 32px rgba(0,0,0,.45);
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg); color: var(--text);
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      min-height: 100vh; display: flex; align-items: center; justify-content: center;
-      padding: 16px;
-    }
-    .app { width: 100%; max-width: 760px; }
-    .screen { display: none; }
-    .screen.active { display: block; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Správne právo procesné – Prvá časť – Kvíz</title>
+<style>
+  :root {
+    --primary: #818cf8;
+    --primary-dark: #6366f1;
+    --primary-light: #1e1b4b;
+    --success: #4ade80;
+    --success-light: #052e16;
+    --danger: #f87171;
+    --danger-light: #2d0a0a;
+    --warning: #fbbf24;
+    --warning-light: #2d1f00;
+    --bg: #0f172a;
+    --bg2: #1e293b;
+    --card: #1e293b;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #334155;
+    --radius: 14px;
+  }
 
-    /* ── HEADER ── */
-    .quiz-header {
-      background: var(--card); border-radius: var(--radius);
-      padding: 18px 22px; margin-bottom: 16px;
-      display: flex; align-items: center; gap: 14px;
-      box-shadow: var(--shadow);
-    }
-    .quiz-header h1 { font-size: 1.15rem; font-weight: 700; color: var(--accent); }
-    .quiz-header p  { font-size: .82rem; color: var(--muted); margin-top: 2px; }
-    .logo { font-size: 2rem; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* ── MODE SCREEN ── */
-    .mode-card {
-      background: var(--card); border-radius: var(--radius);
-      padding: 32px 28px; box-shadow: var(--shadow); text-align: center;
-    }
-    .mode-card h2 { font-size: 1.4rem; margin-bottom: 8px; }
-    .mode-card p  { color: var(--muted); margin-bottom: 28px; font-size: .9rem; }
-    .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px; }
-    .mode-btn {
-      background: var(--card2); border: 2px solid var(--border);
-      border-radius: var(--radius); padding: 20px 12px;
-      cursor: pointer; transition: all .2s; color: var(--text);
-    }
-    .mode-btn:hover, .mode-btn.selected {
-      border-color: var(--accent); background: #1e2240;
-    }
-    .mode-btn .mode-icon { font-size: 2rem; margin-bottom: 8px; }
-    .mode-btn .mode-name { font-weight: 700; font-size: 1rem; }
-    .mode-btn .mode-desc { font-size: .78rem; color: var(--muted); margin-top: 4px; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 24px 16px 60px;
+  }
 
-    .count-section { margin-bottom: 24px; }
-    .count-section h3 { font-size: .95rem; color: var(--muted); margin-bottom: 12px; }
-    .count-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
-    .count-btn {
-      background: var(--card2); border: 2px solid var(--border);
-      border-radius: 8px; padding: 8px 18px; cursor: pointer;
-      font-size: .9rem; color: var(--text); transition: all .2s;
-      display: flex; flex-direction: column; align-items: center; gap: 2px;
-    }
-    .count-btn:hover, .count-btn.selected {
-      border-color: var(--accent2); background: #1e1e38; color: var(--accent2);
-    }
-    .count-btn .count-tag {
-      font-size: .68rem; color: var(--yellow); font-weight: 700;
-    }
-    .count-btn.selected .count-tag { color: var(--yellow); }
+  .container { width: 100%; max-width: 780px; }
 
-    /* ── BUTTONS ── */
-    .btn {
-      border: none; border-radius: 10px; padding: 12px 28px;
-      font-size: 1rem; font-weight: 600; cursor: pointer; transition: all .2s;
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #fff;
-    }
-    .btn-primary:hover { opacity: .88; transform: translateY(-1px); }
-    .btn-outline {
-      background: transparent; border: 2px solid var(--border); color: var(--muted);
-    }
-    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
-    .btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+  .quiz-header {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 22px 28px 18px;
+    margin-bottom: 18px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.4);
+    border: 1px solid var(--border);
+  }
+  .quiz-header h1 { font-size: 1.25rem; font-weight: 700; color: var(--primary); margin-bottom: 2px; }
+  .quiz-header .sub2 { font-size: .82rem; color: var(--primary); opacity: .7; margin-bottom: 4px; font-weight: 600; }
+  .quiz-header .sub { font-size: .85rem; color: var(--muted); margin-bottom: 14px; }
 
-    /* ── PROGRESS ── */
-    .progress-bar-wrap {
-      background: var(--card2); border-radius: 99px;
-      height: 8px; margin-bottom: 14px; overflow: hidden;
-    }
-    .progress-bar-fill {
-      height: 100%; border-radius: 99px;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      transition: width .4s ease;
-    }
-    .progress-info {
-      display: flex; justify-content: space-between;
-      font-size: .8rem; color: var(--muted); margin-bottom: 18px;
-    }
+  .progress-wrap { display: flex; align-items: center; gap: 12px; }
+  .progress-track { flex: 1; height: 8px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary-dark), var(--primary)); border-radius: 99px; transition: width .4s ease; }
+  .progress-label { font-size: .82rem; color: var(--muted); white-space: nowrap; min-width: 60px; text-align: right; }
 
-    /* ── QUESTION CARD ── */
-    .q-card {
-      background: var(--card); border-radius: var(--radius);
-      padding: 28px 26px; box-shadow: var(--shadow); margin-bottom: 16px;
-    }
-    .q-num { font-size: .8rem; color: var(--accent2); font-weight: 700; margin-bottom: 10px; }
-    .q-text { font-size: 1.08rem; font-weight: 600; line-height: 1.55; margin-bottom: 22px; }
-    .q-stem { color: var(--muted); font-size: .88rem; margin-bottom: 14px; font-style: italic; }
+  .score-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--primary-light); color: var(--primary);
+    border-radius: 99px; padding: 4px 12px; font-size: .82rem; font-weight: 600;
+    margin-top: 10px; border: 1px solid var(--primary-dark);
+  }
 
-    /* ── CHOICES (en-bloc) ── */
-    .choices { display: flex; flex-direction: column; gap: 10px; }
-    .choice-btn {
-      background: var(--card2); border: 2px solid var(--border);
-      border-radius: 10px; padding: 14px 16px; text-align: left;
-      cursor: pointer; font-size: .95rem; color: var(--text);
-      transition: all .2s; display: flex; align-items: center; gap: 10px;
-    }
-    .choice-btn:hover:not(:disabled) { border-color: var(--accent); background: #1e2240; }
-    .choice-btn .cb-letter {
-      background: var(--border); border-radius: 6px;
-      padding: 2px 8px; font-size: .78rem; font-weight: 700; flex-shrink: 0;
-    }
-    .choice-btn.selected  { border-color: var(--accent); background: #1e2240; }
-    .choice-btn.correct   { border-color: var(--green); background: #0d2e1a; }
-    .choice-btn.incorrect { border-color: var(--red);   background: #2e0d0d; }
-    .choice-btn.missed    { border-color: var(--yellow); background: #2e2000; }
-    .choice-btn:disabled  { cursor: default; }
+  .screen { display: none; }
+  .screen.active { display: block; }
 
-    /* ── TRUE/FALSE ── */
-    .tf-statement {
-      background: var(--card2); border: 2px solid var(--border);
-      border-radius: 10px; padding: 18px 20px; margin-bottom: 18px;
-      font-size: 1rem; line-height: 1.55;
-    }
-    .tf-stem  { font-size: .82rem; color: var(--muted); margin-bottom: 6px; }
-    .tf-claim { font-weight: 600; }
-    .tf-btn-row { display: flex; gap: 14px; justify-content: center; margin-bottom: 14px; }
-    .tf-btn {
-      flex: 1; max-width: 180px; padding: 14px; border-radius: 10px;
-      font-size: 1rem; font-weight: 700; border: 2px solid var(--border);
-      background: var(--card2); color: var(--text); cursor: pointer; transition: all .2s;
-    }
-    .tf-btn:hover:not(:disabled) { border-color: var(--accent); }
-    .tf-btn.correct   { border-color: var(--green); background: #0d2e1a; color: var(--green); }
-    .tf-btn.incorrect { border-color: var(--red);   background: #2e0d0d; color: var(--red); }
-    .tf-btn:disabled  { cursor: default; }
-    .feedback-row {
-      text-align: center; font-weight: 700; font-size: 1rem;
-      min-height: 24px; margin-bottom: 8px;
-    }
-    .feedback-row.ok  { color: var(--green); }
-    .feedback-row.err { color: var(--red); }
-    .tf-countdown { text-align: center; color: var(--muted); font-size: .85rem; margin-top: 6px; }
-    .tf-countdown-bar {
-      height: 4px; background: var(--border); border-radius: 99px;
-      margin-top: 6px; overflow: hidden;
-    }
-    .tf-countdown-fill {
-      height: 100%; background: var(--accent);
-      border-radius: 99px; width: 100%;
-      transition: width 0.5s linear;
-    }
+  /* START */
+  .start-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 36px 32px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.4);
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+  .start-card h2 { font-size: 1.5rem; margin-bottom: 8px; color: var(--primary); }
+  .start-card p { color: var(--muted); margin-bottom: 28px; line-height: 1.6; }
 
-    /* ── BTN ROW ── */
-    .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .section-label { margin-bottom: 10px; font-weight: 600; font-size: .88rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
 
-    /* ── RESULT ── */
-    .result-card {
-      background: var(--card); border-radius: var(--radius);
-      padding: 36px 28px; box-shadow: var(--shadow); text-align: center;
-    }
-    .result-emoji { font-size: 3.5rem; margin-bottom: 10px; }
-    .result-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; }
-    .result-sub   { color: var(--muted); margin-bottom: 28px; font-size: .95rem; }
-    .percent-ring { position: relative; display: inline-block; margin-bottom: 24px; }
-    .ring-bg   { fill: none; stroke: var(--card2); stroke-width: 10; }
-    .ring-fill { fill: none; stroke: var(--accent); stroke-width: 10;
-                 stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; }
-    .ring-text {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-      font-size: 1.5rem; font-weight: 800; color: var(--accent);
-    }
-    .stats-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 28px; flex-wrap: wrap; }
-    .stat-box { background: var(--card2); border-radius: 10px; padding: 14px 22px; min-width: 90px; }
-    .stat-num { font-size: 1.8rem; font-weight: 800; }
-    .stat-lbl { font-size: .75rem; color: var(--muted); margin-top: 2px; }
-    .s-total   .stat-num { color: var(--accent); }
-    .s-correct .stat-num { color: var(--green); }
-    .s-wrong   .stat-num { color: var(--red); }
-    .result-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 28px; }
-    .wrong-list { text-align: left; }
-    .wrong-list h3 { font-size: 1rem; color: var(--red); margin-bottom: 12px; }
-    .wrong-item {
-      background: var(--card2); border-radius: 8px; padding: 12px 14px;
-      margin-bottom: 8px; font-size: .88rem; border-left: 3px solid var(--red);
-    }
-    .wrong-item .wi-q { color: var(--muted); margin-bottom: 4px; font-size: .8rem; }
-    .wrong-item .wi-a { font-weight: 600; }
-    .wi-correct { color: var(--green); }
-    .wi-wrong   { color: var(--red); }
+  .count-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 32px; flex-wrap: wrap; }
+  .count-btn {
+    padding: 9px 22px; border-radius: 99px; border: 2px solid var(--border);
+    background: var(--bg2); cursor: pointer; font-weight: 600; font-size: .9rem;
+    color: var(--muted); transition: all .2s;
+  }
+  .count-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .count-btn.selected { border-color: var(--primary); color: var(--primary); background: var(--primary-light); }
 
-    @media(max-width:500px){
-      .mode-grid { grid-template-columns: 1fr; }
-      .q-card { padding: 20px 16px; }
-    }
-  </style>
+  /* QUESTION */
+  .question-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 30px 28px 24px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.4);
+    margin-bottom: 18px;
+    border: 1px solid var(--border);
+  }
+  .q-number { font-size: .8rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
+  .q-text { font-size: 1.08rem; font-weight: 600; line-height: 1.55; margin-bottom: 24px; color: var(--text); }
+
+  .options-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .option-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 16px; border: 2px solid var(--border); border-radius: 10px;
+    cursor: pointer; transition: all .2s; user-select: none; background: var(--bg2);
+  }
+  .option-item:hover { border-color: var(--primary); background: var(--primary-light); }
+  .option-item.checked { border-color: var(--primary); background: var(--primary-light); }
+  .option-item input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; margin-top: 2px; }
+  .option-text { font-size: .95rem; line-height: 1.5; color: var(--text); }
+
+  .option-item.correct-ans { border-color: var(--success) !important; background: var(--success-light) !important; }
+  .option-item.wrong-ans   { border-color: var(--danger)  !important; background: var(--danger-light)  !important; }
+  .option-item.missed-ans  { border-color: var(--warning) !important; background: var(--warning-light) !important; }
+  .option-item.disabled    { cursor: default; pointer-events: none; }
+
+  .feedback-row {
+    display: none; align-items: center; gap: 10px; margin-top: 18px;
+    padding: 12px 16px; border-radius: 10px; font-weight: 600; font-size: .92rem;
+  }
+  .feedback-row.correct { background: var(--success-light); color: var(--success); border: 1px solid var(--success); }
+  .feedback-row.wrong   { background: var(--danger-light);  color: var(--danger);  border: 1px solid var(--danger);  }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 26px; border-radius: 99px; border: none;
+    font-weight: 700; font-size: .95rem; cursor: pointer; transition: all .2s;
+  }
+  .btn-primary { background: var(--primary-dark); color: #fff; }
+  .btn-primary:hover { background: var(--primary); }
+  .btn-primary:disabled { opacity: .3; cursor: default; }
+  .btn-outline { background: transparent; border: 2px solid var(--primary-dark); color: var(--primary); }
+  .btn-outline:hover { background: var(--primary-light); }
+  .btn-outline:disabled { opacity: .3; cursor: default; }
+  .btn-ghost { background: transparent; border: 2px solid var(--border); color: var(--muted); }
+  .btn-ghost:hover { border-color: var(--muted); color: var(--text); }
+
+  .btn-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+  /* RESULT */
+  .result-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 40px 32px;
+    box-shadow: 0 1px 6px rgba(0,0,0,.4);
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+  .result-emoji { font-size: 3.5rem; margin-bottom: 12px; }
+  .result-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; color: var(--text); }
+  .result-sub { color: var(--muted); margin-bottom: 28px; font-size: .95rem; }
+
+  .stats-row { display: flex; justify-content: center; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }
+  .stat-box { background: var(--bg2); border-radius: 12px; padding: 16px 24px; min-width: 110px; border: 1px solid var(--border); }
+  .stat-num { font-size: 2rem; font-weight: 800; }
+  .stat-lbl { font-size: .78rem; color: var(--muted); margin-top: 2px; }
+  .stat-box.s-correct .stat-num { color: var(--success); }
+  .stat-box.s-wrong   .stat-num { color: var(--danger); }
+  .stat-box.s-total   .stat-num { color: var(--primary); }
+
+  .percent-ring { width: 130px; height: 130px; margin: 0 auto 24px; position: relative; }
+  .percent-ring svg { transform: rotate(-90deg); }
+  .percent-ring .ring-bg   { fill: none; stroke: var(--border); stroke-width: 10; }
+  .percent-ring .ring-fill { fill: none; stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset .8s ease; }
+  .percent-ring .ring-text {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-size: 1.6rem; font-weight: 800; color: var(--text);
+  }
+
+  .result-actions { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+  .result-actions .btn { min-width: 260px; justify-content: center; }
+
+  @media(max-width:500px){
+    .question-card { padding: 22px 16px 18px; }
+    .start-card, .result-card { padding: 24px 16px; }
+  }
+</style>
 </head>
 <body>
-<div class="app">
+<div class="container">
 
   <!-- HEADER -->
   <div class="quiz-header">
-    <div class="logo">⚖️</div>
-    <div>
-      <h1>Správne právo procesné – 1. časť</h1>
-      <p>Interaktívny kvíz · 96 otázok · 192 tvrdení</p>
+    <h1>⚖️ Správne právo procesné – Prvá časť</h1>
+    <div class="sub2">Správne konanie · Opravné prostriedky · Správne súdnictvo · Priestupkové konanie · Výkon rozhodnutí</div>
+    <div class="sub">Zaškrtni pravdivé tvrdenia – môže byť jedno, oboje alebo žiadne</div>
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-label" id="progressLabel">0 / 0</div>
     </div>
+    <div class="score-badge" id="scoreBadge">⭐ Skóre: 0</div>
   </div>
 
-  <!-- ① MODE -->
-  <div class="screen active" id="screenMode">
-    <div class="mode-card">
-      <h2>Vyber režim</h2>
-      <p>Zvol si typ otázok a počet, ktorý chceš precvičiť</p>
-      <div class="mode-grid">
-        <div class="mode-btn selected" onclick="selectMode('bloc')" id="modeBloc">
-          <div class="mode-icon">📋</div>
-          <div class="mode-name">En-bloc</div>
-          <div class="mode-desc">Vyber správne tvrdenia zo skupiny</div>
-        </div>
-        <div class="mode-btn" onclick="selectMode('tf')" id="modeTF">
-          <div class="mode-icon">⚡</div>
-          <div class="mode-name">Pravda / Nepravda</div>
-          <div class="mode-desc">Rýchle hodnotenie každého tvrdenia</div>
-        </div>
+  <!-- START SCREEN -->
+  <div class="screen active" id="screenStart">
+    <div class="start-card">
+      <h2>Vyber počet otázok</h2>
+      <p>Každá otázka má dve tvrdenia. Body získaš iba vtedy, ak správne zaškrtneš <em>aj</em> nepravdivé <em>aj</em> pravdivé tvrdenia – všetko alebo nič.</p>
+      <div class="section-label">Počet otázok</div>
+      <div class="count-row">
+        <button class="count-btn" data-count="15" onclick="selectCount(this)">15</button>
+        <button class="count-btn" data-count="30" onclick="selectCount(this)">30</button>
+        <button class="count-btn selected" data-count="40" onclick="selectCount(this)">40</button>
+        <button class="count-btn" data-count="60" onclick="selectCount(this)">60</button>
+        <button class="count-btn" data-count="all" onclick="selectCount(this)">Všetky</button>
       </div>
-      <div class="count-section">
-        <h3 id="countTitle">Počet otázok</h3>
-        <div class="count-grid" id="countGrid"></div>
-      </div>
-      <button class="btn btn-primary" onclick="startQuiz()" style="width:100%;padding:14px">
+      <button class="btn btn-primary" onclick="startQuiz()" style="font-size:1rem;padding:13px 40px">
         🚀 Spustiť kvíz
       </button>
     </div>
   </div>
 
-  <!-- ② QUIZ -->
-  <div class="screen" id="screenQuiz">
-    <div class="progress-bar-wrap">
-      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
-    </div>
-    <div class="progress-info">
-      <span id="progText">Otázka 1 / 20</span>
-      <span id="scoreText">✅ 0 &nbsp; ❌ 0</span>
-    </div>
-
-    <div class="q-card" id="qCard">
-      <div class="q-num" id="qNum"></div>
+  <!-- QUESTION SCREEN -->
+  <div class="screen" id="screenQuestion">
+    <div class="question-card">
+      <div class="q-number" id="qNumber">Otázka 1 z 40</div>
       <div class="q-text" id="qText"></div>
-
-      <!-- En-bloc -->
-      <div id="blocPanel">
-        <div class="q-stem">Označ všetky PRAVDIVÉ tvrdenia (môže ich byť viac):</div>
-        <div class="choices" id="choicesList"></div>
-      </div>
-
-      <!-- T/F -->
-      <div id="tfPanel" style="display:none">
-        <div class="tf-statement">
-          <div class="tf-stem"  id="tfStem"></div>
-          <div class="tf-claim" id="tfClaim"></div>
-        </div>
-        <div class="tf-btn-row">
-          <button class="tf-btn" id="tfBtnTrue"  onclick="answerTF(true)">✅ Pravda</button>
-          <button class="tf-btn" id="tfBtnFalse" onclick="answerTF(false)">❌ Nepravda</button>
-        </div>
-        <div class="feedback-row" id="feedbackRowTF"></div>
-        <div class="tf-countdown" id="tfCountdown" style="display:none">
-          <span>Ďalšie tvrdenie…</span>
-          <div class="tf-countdown-bar">
-            <div class="tf-countdown-fill" id="tfCountdownFill"></div>
-          </div>
-        </div>
-      </div>
+      <div class="options-list" id="optionsList"></div>
+      <div class="feedback-row" id="feedbackRow"></div>
     </div>
-
-    <div class="btn-row" id="mainBtnRow">
-      <button class="btn btn-outline" onclick="skipQuestion()">⏭ Preskočiť</button>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="skipQuestion()">⏭ Preskočiť</button>
       <button class="btn btn-primary" id="btnConfirm" onclick="confirmAnswer()">✔ Potvrdiť</button>
       <button class="btn btn-primary" id="btnNext" onclick="nextQuestion()" style="display:none">Ďalej →</button>
     </div>
   </div>
 
-  <!-- ③ RESULT -->
+  <!-- RESULT SCREEN -->
   <div class="screen" id="screenResult">
     <div class="result-card">
       <div class="result-emoji" id="resultEmoji">🎉</div>
       <div class="result-title" id="resultTitle">Výsledok</div>
-      <div class="result-sub"   id="resultSub"></div>
+      <div class="result-sub" id="resultSub"></div>
+
       <div class="percent-ring">
         <svg viewBox="0 0 100 100" width="130" height="130">
-          <circle class="ring-bg"   cx="50" cy="50" r="45"/>
+          <circle class="ring-bg" cx="50" cy="50" r="45"/>
           <circle class="ring-fill" id="ringFill" cx="50" cy="50" r="45"
             stroke-dasharray="282.7" stroke-dashoffset="282.7"/>
         </svg>
         <div class="ring-text" id="ringText">0%</div>
       </div>
+
       <div class="stats-row">
-        <div class="stat-box s-total">  <div class="stat-num" id="statTotal">0</div>   <div class="stat-lbl">Celkom</div></div>
-        <div class="stat-box s-correct"><div class="stat-num" id="statCorrect">0</div> <div class="stat-lbl">Správne</div></div>
-        <div class="stat-box s-wrong">  <div class="stat-num" id="statWrong">0</div>   <div class="stat-lbl">Chybné</div></div>
+        <div class="stat-box s-total"><div class="stat-num" id="statTotal">0</div><div class="stat-lbl">Celkom otázok</div></div>
+        <div class="stat-box s-correct"><div class="stat-num" id="statCorrect">0</div><div class="stat-lbl">Správne</div></div>
+        <div class="stat-box s-wrong"><div class="stat-num" id="statWrong">0</div><div class="stat-lbl">Chybné</div></div>
       </div>
+
       <div class="result-actions">
         <button class="btn btn-primary" onclick="restartAll()">🔄 Zopakovať celý test</button>
         <button class="btn btn-outline" onclick="restartWrong()" id="btnWrongOnly">🔁 Zopakovať len chybné</button>
-        <button class="btn btn-outline" onclick="backToMode()">⚙️ Zmeniť nastavenia</button>
+        <button class="btn btn-ghost" onclick="goToStart()">⚙️ Zmeniť nastavenia</button>
       </div>
-      <div class="wrong-list" id="wrongList"></div>
     </div>
   </div>
 
 </div>
+
 <script>
-/* ════════════════════════════════════════════
-   96 OTÁZOK
-════════════════════════════════════════════ */
 const ALL_QUESTIONS = [
   ["Ustanovenia správneho poriadku, ktoré sa týkajú prvostupňového konania, sa vzťahujú aj na",
     ["konanie o preskúmaní rozhodnutia", true],
@@ -620,84 +554,28 @@ const ALL_QUESTIONS = [
     ["priameho vynútenia uloženej povinnosti", false]],
 ];
 
-/* ════════════════════════════════════════════
-   STAV
-════════════════════════════════════════════ */
-let mode         = 'bloc';
-let countChoice  = 20;
-let questions    = [];
-let qIndex       = 0;
-let correct      = 0;
-let wrong        = 0;
-let wrongItems   = [];
-let tfItems      = [];
-let tfIdx        = 0;
-let tfCorrect    = 0;
-let tfWrong      = 0;
-let tfWrongItems = [];
-let tfTimer      = null;
-let confirmed    = false;
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+let quizQuestions = [];
+let currentIndex  = 0;
+let score         = 0;
+let wrongPool     = [];
+let lastWrongPool = [];
+let selectedCount = 40;
 
-/* ════════════════════════════════════════════
-   POČTY
-════════════════════════════════════════════ */
-// En-bloc: 20 (na teste), 50, všetky (96)
-const BLOC_COUNTS = [
-  { n: 20,  tag: '📝 počet na teste' },
-  { n: 50,  tag: null },
-  { n: 96,  tag: 'Všetky' },
-];
-// TF: 20, 50, 100, 150, všetky (192)
-const TF_COUNTS = [
-  { n: 20,  tag: null },
-  { n: 50,  tag: null },
-  { n: 100, tag: null },
-  { n: 150, tag: null },
-  { n: 192, tag: 'Všetky' },
-];
-
-function buildCountGrid() {
-  const grid   = document.getElementById('countGrid');
-  const counts = (mode === 'bloc') ? BLOC_COUNTS : TF_COUNTS;
-  const def    = (mode === 'bloc') ? 20 : 20;
-
-  // Skontroluj či countChoice je v aktuálnych možnostiach
-  const valid = counts.map(c => c.n);
-  if (!valid.includes(countChoice)) countChoice = def;
-
-  document.getElementById('countTitle').textContent =
-    mode === 'bloc' ? 'Počet otázok' : 'Počet tvrdení';
-
-  grid.innerHTML = '';
-  counts.forEach(({ n, tag }) => {
-    const b = document.createElement('button');
-    b.className = 'count-btn' + (n === countChoice ? ' selected' : '');
-
-    const label = tag === 'Všetky' ? `Všetky (${n})` : String(n);
-    b.innerHTML = `<span>${label}</span>` +
-      (tag && tag !== 'Všetky' ? `<span class="count-tag">${tag}</span>` : '');
-
-    b.onclick = () => {
-      countChoice = n;
-      document.querySelectorAll('.count-btn').forEach(x => x.classList.remove('selected'));
-      b.classList.add('selected');
-    };
-    grid.appendChild(b);
-  });
+// ═══════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
-
-function selectMode(m) {
-  mode = m;
-  document.getElementById('modeBloc').classList.toggle('selected', m === 'bloc');
-  document.getElementById('modeTF').classList.toggle('selected', m === 'tf');
-  buildCountGrid();
+function selectCount(el) {
+  document.querySelectorAll('.count-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedCount = el.dataset.count === 'all' ? 'all' : parseInt(el.dataset.count);
 }
-
-/* ════════════════════════════════════════════
-   INIT
-════════════════════════════════════════════ */
-window.onload = () => { buildCountGrid(); };
-
 function shuffle(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -706,301 +584,162 @@ function shuffle(arr) {
   }
   return a;
 }
-
-function show(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+function updateProgress() {
+  const total = quizQuestions.length;
+  const pct   = total ? Math.round((currentIndex / total) * 100) : 0;
+  document.getElementById('progressFill').style.width   = pct + '%';
+  document.getElementById('progressLabel').textContent  = currentIndex + ' / ' + total;
+  document.getElementById('scoreBadge').textContent     = '⭐ Skóre: ' + score;
 }
 
-/* ════════════════════════════════════════════
-   START
-════════════════════════════════════════════ */
-function startQuiz(pool) {
-  const src = pool || shuffle(ALL_QUESTIONS);
-
-  if (mode === 'tf') {
-    let all = [];
-    src.forEach(q => {
-      const stem = q[0];
-      for (let i = 1; i < q.length; i++) {
-        all.push({ stem, claim: q[i][0], correct: q[i][1] });
-      }
-    });
-    all = shuffle(all);
-    tfItems      = all.slice(0, Math.min(countChoice, all.length));
-    tfIdx        = 0;
-    tfCorrect    = 0;
-    tfWrong      = 0;
-    tfWrongItems = [];
-    show('screenQuiz');
-    document.getElementById('blocPanel').style.display  = 'none';
-    document.getElementById('tfPanel').style.display    = 'block';
-    document.getElementById('mainBtnRow').style.display = 'none';
-    renderTF();
-  } else {
-    questions  = src.slice(0, Math.min(countChoice, src.length));
-    qIndex     = 0;
-    correct    = 0;
-    wrong      = 0;
-    wrongItems = [];
-    confirmed  = false;
-    show('screenQuiz');
-    document.getElementById('blocPanel').style.display  = 'block';
-    document.getElementById('tfPanel').style.display    = 'none';
-    document.getElementById('mainBtnRow').style.display = 'flex';
-    renderQuestion();
-  }
+// ═══════════════════════════════════════════════
+//  QUIZ FLOW
+// ═══════════════════════════════════════════════
+function startQuiz() {
+  let pool = shuffle(ALL_QUESTIONS);
+  if (selectedCount !== 'all') pool = pool.slice(0, Math.min(selectedCount, pool.length));
+  quizQuestions = pool;
+  currentIndex  = 0;
+  score         = 0;
+  wrongPool     = [];
+  updateProgress();
+  showScreen('screenQuestion');
+  renderQuestion();
 }
 
-/* ════════════════════════════════════════════
-   EN-BLOC
-════════════════════════════════════════════ */
+function goToStart()   { showScreen('screenStart'); updateProgress(); }
+function restartAll()  { showScreen('screenStart'); updateProgress(); }
+
+function restartWrong() {
+  if (!lastWrongPool.length) return;
+  quizQuestions = shuffle(lastWrongPool);
+  currentIndex  = 0;
+  score         = 0;
+  wrongPool     = [];
+  updateProgress();
+  showScreen('screenQuestion');
+  renderQuestion();
+}
+
+// ═══════════════════════════════════════════════
+//  RENDER QUESTION
+// ═══════════════════════════════════════════════
 function renderQuestion() {
-  confirmed = false;
-  const q   = questions[qIndex];
-  const tot = questions.length;
+  if (currentIndex >= quizQuestions.length) { showResult(); return; }
+  const q = quizQuestions[currentIndex];
+  document.getElementById('qNumber').textContent =
+    'Otázka ' + (currentIndex + 1) + ' z ' + quizQuestions.length;
+  document.getElementById('qText').textContent = q[0];
 
-  document.getElementById('progressFill').style.width = `${(qIndex / tot) * 100}%`;
-  document.getElementById('progText').textContent     = `Otázka ${qIndex + 1} / ${tot}`;
-  document.getElementById('scoreText').innerHTML      = `✅ ${correct} &nbsp; ❌ ${wrong}`;
-  document.getElementById('qNum').textContent         = `Otázka ${qIndex + 1}`;
-  document.getElementById('qText').textContent        = q[0];
-
-  const list    = document.getElementById('choicesList');
+  const list = document.getElementById('optionsList');
   list.innerHTML = '';
-  const letters  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const choices  = shuffle(q.slice(1));
-
-  choices.forEach((ch, i) => {
-    const btn = document.createElement('button');
-    btn.className       = 'choice-btn';
-    btn.dataset.correct = ch[1];
-    btn.innerHTML       = `<span class="cb-letter">${letters[i]}</span>${ch[0]}`;
-    btn.onclick         = () => { if (!confirmed) btn.classList.toggle('selected'); };
-    list.appendChild(btn);
+  [q[1], q[2]].forEach(opt => {
+    const item = document.createElement('label');
+    item.className = 'option-item';
+    item.innerHTML = `<input type="checkbox" /><span class="option-text">${opt[0]}</span>`;
+    item.querySelector('input').addEventListener('change', () => {
+      item.classList.toggle('checked', item.querySelector('input').checked);
+    });
+    list.appendChild(item);
   });
 
+  const fb = document.getElementById('feedbackRow');
+  fb.style.display = 'none'; fb.className = 'feedback-row';
   document.getElementById('btnConfirm').style.display = 'inline-flex';
   document.getElementById('btnNext').style.display    = 'none';
 }
 
+// ═══════════════════════════════════════════════
+//  CONFIRM / NEXT / SKIP
+// ═══════════════════════════════════════════════
 function confirmAnswer() {
-  if (confirmed) return;
-  confirmed = true;
-  const btns = document.querySelectorAll('.choice-btn');
-  let isRight = true;
+  const q     = quizQuestions[currentIndex];
+  const items = document.querySelectorAll('.option-item');
+  const cb0   = items[0].querySelector('input').checked;
+  const cb1   = items[1].querySelector('input').checked;
+  const c0    = q[1][1], c1 = q[2][1];
+  const isRight = (cb0 === c0) && (cb1 === c1);
 
-  btns.forEach(btn => {
-    const c   = btn.dataset.correct === 'true';
-    const sel = btn.classList.contains('selected');
-    btn.disabled = true;
-    if      ( c &&  sel) btn.classList.add('correct');
-    else if (!c && !sel) { /* ok */ }
-    else if ( c && !sel) { btn.classList.add('missed');    isRight = false; }
-    else                 { btn.classList.add('incorrect'); isRight = false; }
+  items.forEach((item, idx) => {
+    item.classList.add('disabled');
+    const checked = item.querySelector('input').checked;
+    const should  = idx === 0 ? c0 : c1;
+    if      ( checked &&  should) item.classList.add('correct-ans');
+    else if ( checked && !should) item.classList.add('wrong-ans');
+    else if (!checked &&  should) item.classList.add('missed-ans');
   });
 
-  if (isRight) correct++;
-  else {
-    wrong++;
-    const q = questions[qIndex];
-    wrongItems.push({
-      stem: q[0],
-      choices: q.slice(1).map(c => ({ text: c[0], correct: c[1] }))
-    });
+  const fb = document.getElementById('feedbackRow');
+  fb.style.display = 'flex';
+  if (isRight) {
+    score++;
+    fb.className = 'feedback-row correct';
+    fb.innerHTML = '✅ Správne! Získavaš bod.';
+  } else {
+    fb.className = 'feedback-row wrong';
+    fb.innerHTML = '❌ Nesprávne. Správne: <strong style="margin-left:6px">' +
+      q[1][0] + ': ' + (c0 ? '✔' : '✘') + ' | ' +
+      q[2][0] + ': ' + (c1 ? '✔' : '✘') + '</strong>';
+    wrongPool.push(q);
   }
-
-  document.getElementById('scoreText').innerHTML      = `✅ ${correct} &nbsp; ❌ ${wrong}`;
   document.getElementById('btnConfirm').style.display = 'none';
   document.getElementById('btnNext').style.display    = 'inline-flex';
+  updateProgress();
 }
 
 function nextQuestion() {
-  qIndex++;
-  if (qIndex >= questions.length) showResult();
-  else renderQuestion();
+  currentIndex++;
+  updateProgress();
+  if (currentIndex >= quizQuestions.length) { showResult(); return; }
+  renderQuestion();
 }
 
 function skipQuestion() {
-  if (mode === 'tf') return;
-  qIndex++;
-  if (qIndex >= questions.length) showResult();
-  else renderQuestion();
+  wrongPool.push(quizQuestions[currentIndex]);
+  currentIndex++;
+  updateProgress();
+  if (currentIndex >= quizQuestions.length) { showResult(); return; }
+  renderQuestion();
 }
 
-/* ════════════════════════════════════════════
-   TRUE / FALSE  –  rýchle načítanie (500 ms)
-════════════════════════════════════════════ */
-function renderTF() {
-  if (tfIdx >= tfItems.length) { showResult(); return; }
-  const item = tfItems[tfIdx];
-  const tot  = tfItems.length;
-
-  document.getElementById('progressFill').style.width = `${(tfIdx / tot) * 100}%`;
-  document.getElementById('progText').textContent     = `Tvrdenie ${tfIdx + 1} / ${tot}`;
-  document.getElementById('scoreText').innerHTML      = `✅ ${tfCorrect} &nbsp; ❌ ${tfWrong}`;
-  document.getElementById('tfStem').textContent       = item.stem;
-  document.getElementById('tfClaim').textContent      = item.claim;
-
-  const fb = document.getElementById('feedbackRowTF');
-  fb.textContent = ''; fb.className = 'feedback-row';
-
-  const cd = document.getElementById('tfCountdown');
-  cd.style.display = 'none';
-  document.getElementById('tfCountdownFill').style.transition = 'none';
-  document.getElementById('tfCountdownFill').style.width      = '100%';
-
-  const btnT = document.getElementById('tfBtnTrue');
-  const btnF = document.getElementById('tfBtnFalse');
-  btnT.disabled = false; btnT.className = 'tf-btn';
-  btnF.disabled = false; btnF.className = 'tf-btn';
-}
-
-function answerTF(answer) {
-  const btnT = document.getElementById('tfBtnTrue');
-  const btnF = document.getElementById('tfBtnFalse');
-  if (btnT.disabled) return;   // zabrání dvojkliku
-
-  const item = tfItems[tfIdx];
-  const ok   = (answer === item.correct);
-  const fb   = document.getElementById('feedbackRowTF');
-
-  btnT.disabled = true; btnF.disabled = true;
-
-  if (ok) {
-    tfCorrect++;
-    fb.textContent = '✅ Správne!';
-    fb.className   = 'feedback-row ok';
-    (answer ? btnT : btnF).classList.add('correct');
-  } else {
-    tfWrong++;
-    fb.innerHTML = `❌ Chyba! Správna odpoveď: <strong>${item.correct ? 'Pravda' : 'Nepravda'}</strong>`;
-    fb.className = 'feedback-row err';
-    (answer ? btnT : btnF).classList.add('incorrect');
-    tfWrongItems.push(item);
-  }
-
-  document.getElementById('scoreText').innerHTML = `✅ ${tfCorrect} &nbsp; ❌ ${tfWrong}`;
-
-  // Countdown bar – 500 ms
-  const cd   = document.getElementById('tfCountdown');
-  const fill = document.getElementById('tfCountdownFill');
-  cd.style.display = 'block';
-  fill.style.transition = 'none';
-  fill.style.width      = '100%';
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    fill.style.transition = 'width 0.5s linear';
-    fill.style.width      = '0%';
-  }));
-
-  tfTimer = setTimeout(() => {
-    tfIdx++;
-    renderTF();
-  }, 500);
-}
-
-/* ════════════════════════════════════════════
-   VÝSLEDOK
-════════════════════════════════════════════ */
+// ═══════════════════════════════════════════════
+//  RESULT
+// ═══════════════════════════════════════════════
 function showResult() {
-  show('screenResult');
-  let total, c, w, wItems;
-  if (mode === 'tf') {
-    total = tfItems.length; c = tfCorrect; w = tfWrong; wItems = tfWrongItems;
-  } else {
-    total = questions.length; c = correct; w = wrong; wItems = wrongItems;
-  }
+  const total = quizQuestions.length;
+  const pct   = total ? Math.round((score / total) * 100) : 0;
+  lastWrongPool = [...wrongPool];
 
-  const pct = total ? Math.round((c / total) * 100) : 0;
-  document.getElementById('statTotal').textContent   = total;
-  document.getElementById('statCorrect').textContent = c;
-  document.getElementById('statWrong').textContent   = w;
-  document.getElementById('ringText').textContent    = pct + '%';
+  let emoji, title;
+  if      (pct >= 90) { emoji = '🏆'; title = 'Výborne!'; }
+  else if (pct >= 75) { emoji = '🎉'; title = 'Veľmi dobre!'; }
+  else if (pct >= 60) { emoji = '👍'; title = 'Dobre!'; }
+  else if (pct >= 40) { emoji = '📖'; title = 'Treba ešte trochu cvičiť'; }
+  else                { emoji = '💪'; title = 'Nevzdávaj sa, skús znova!'; }
+
+  document.getElementById('resultEmoji').textContent   = emoji;
+  document.getElementById('resultTitle').textContent   = title;
+  document.getElementById('resultSub').textContent     =
+    'Dosiahol/a si ' + score + ' z ' + total + ' bodov (' + pct + '%)';
+  document.getElementById('statTotal').textContent     = total;
+  document.getElementById('statCorrect').textContent   = score;
+  document.getElementById('statWrong').textContent     = total - score;
+  document.getElementById('ringText').textContent      = pct + '%';
 
   const ring = document.getElementById('ringFill');
   ring.style.strokeDashoffset = 282.7 - (282.7 * pct / 100);
   ring.style.stroke = pct >= 75 ? '#4ade80' : pct >= 50 ? '#fbbf24' : '#f87171';
 
-  let emoji = '😔', title = 'Nevzdávaj sa!';
-  if      (pct >= 90) { emoji = '🏆'; title = 'Vynikajúci výsledok!'; }
-  else if (pct >= 75) { emoji = '🎉'; title = 'Skvelá práca!'; }
-  else if (pct >= 55) { emoji = '👍'; title = 'Dobrý výsledok!'; }
-  else if (pct >= 40) { emoji = '📚'; title = 'Treba viac precvičovať.'; }
+  document.getElementById('progressFill').style.width  = '100%';
+  document.getElementById('progressLabel').textContent = total + ' / ' + total;
+  document.getElementById('scoreBadge').textContent    = '⭐ Skóre: ' + score;
 
-  document.getElementById('resultEmoji').textContent = emoji;
-  document.getElementById('resultTitle').textContent = title;
-  document.getElementById('resultSub').textContent   =
-    `Dosiahol/a si ${pct}% (${c} z ${total} ${mode === 'tf' ? 'tvrdení' : 'otázok'})`;
+  const btnWrong = document.getElementById('btnWrongOnly');
+  btnWrong.style.display = lastWrongPool.length > 0 ? 'inline-flex' : 'none';
 
-  document.getElementById('btnWrongOnly').style.display =
-    wItems.length ? 'inline-flex' : 'none';
-
-  const wl = document.getElementById('wrongList');
-  wl.innerHTML = '';
-  if (wItems.length) {
-    const h = document.createElement('h3');
-    h.textContent = `Chybné ${mode === 'tf' ? 'tvrdenia' : 'otázky'} (${wItems.length}):`;
-    wl.appendChild(h);
-    wItems.forEach(item => {
-      const d = document.createElement('div');
-      d.className = 'wrong-item';
-      if (mode === 'tf') {
-        d.innerHTML = `<div class="wi-q">${item.stem}</div>
-          <div class="wi-a">${item.claim}</div>
-          <div class="wi-correct" style="margin-top:5px">
-            ✔ Správne: ${item.correct ? '✅ Pravda' : '❌ Nepravda'}
-          </div>`;
-      } else {
-        let html = `<div class="wi-q">${item.stem}</div>`;
-        item.choices.forEach(ch => {
-          html += `<div class="${ch.correct ? 'wi-correct' : 'wi-wrong'}">
-            ${ch.correct ? '✅' : '❌'} ${ch.text}</div>`;
-        });
-        d.innerHTML = html;
-      }
-      wl.appendChild(d);
-    });
-  }
-}
-
-/* ════════════════════════════════════════════
-   AKCIE PO VÝSLEDKU
-════════════════════════════════════════════ */
-function restartAll() {
-  startQuiz(shuffle(ALL_QUESTIONS));
-}
-
-function restartWrong() {
-  if (mode === 'tf') {
-    tfItems      = shuffle([...tfWrongItems]);
-    tfIdx        = 0;
-    tfCorrect    = 0;
-    tfWrong      = 0;
-    tfWrongItems = [];
-    show('screenQuiz');
-    document.getElementById('mainBtnRow').style.display = 'none';
-    renderTF();
-  } else {
-    const pool = wrongItems.map(wi =>
-      [wi.stem, ...wi.choices.map(c => [c.text, c.correct])]
-    );
-    correct    = 0;
-    wrong      = 0;
-    wrongItems = [];
-    questions  = shuffle(pool);
-    qIndex     = 0;
-    confirmed  = false;
-    show('screenQuiz');
-    document.getElementById('mainBtnRow').style.display = 'flex';
-    renderQuestion();
-  }
-}
-
-function backToMode() {
-  if (tfTimer) clearTimeout(tfTimer);
-  show('screenMode');
-  buildCountGrid();
+  showScreen('screenResult');
 }
 </script>
 </body>
 </html>
+
