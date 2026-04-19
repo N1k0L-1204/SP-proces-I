@@ -1,872 +1,702 @@
+
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Správne právo procesné I – Kvíz</title>
-<style>
-  :root {
-    --primary: #818cf8;
-    --primary-dark: #6366f1;
-    --primary-light: #1e1b4b;
-    --success: #4ade80;
-    --success-light: #052e16;
-    --danger: #f87171;
-    --danger-light: #2d0a0a;
-    --warning: #fbbf24;
-    --warning-light: #2d1f00;
-    --bg: #0f172a;
-    --bg2: #1e293b;
-    --card: #1e293b;
-    --card2: #263045;
-    --text: #e2e8f0;
-    --muted: #94a3b8;
-    --border: #334155;
-    --radius: 14px;
-  }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Správne právo – kvíz</title>
+  <style>
+    :root {
+      --bg: #0f1117; --card: #1a1d27; --card2: #22263a;
+      --accent: #6c8cff; --accent2: #a78bfa;
+      --green: #4ade80; --red: #f87171; --yellow: #fbbf24;
+      --text: #e8eaf6; --muted: #8892b0; --border: #2e3350;
+      --radius: 14px; --shadow: 0 8px 32px rgba(0,0,0,.45);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 16px;
+    }
+    .app { width: 100%; max-width: 760px; }
+    .screen { display: none; }
+    .screen.active { display: block; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+    /* ── HEADER ── */
+    .quiz-header {
+      background: var(--card); border-radius: var(--radius);
+      padding: 18px 22px; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 14px;
+      box-shadow: var(--shadow);
+    }
+    .quiz-header h1 { font-size: 1.15rem; font-weight: 700; color: var(--accent); }
+    .quiz-header p  { font-size: .82rem; color: var(--muted); margin-top: 2px; }
+    .logo { font-size: 2rem; }
 
-  body {
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 24px 16px 60px;
-  }
+    /* ── MODE SCREEN ── */
+    .mode-card {
+      background: var(--card); border-radius: var(--radius);
+      padding: 32px 28px; box-shadow: var(--shadow); text-align: center;
+    }
+    .mode-card h2 { font-size: 1.4rem; margin-bottom: 8px; }
+    .mode-card p  { color: var(--muted); margin-bottom: 28px; font-size: .9rem; }
+    .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px; }
+    .mode-btn {
+      background: var(--card2); border: 2px solid var(--border);
+      border-radius: var(--radius); padding: 20px 12px;
+      cursor: pointer; transition: all .2s; color: var(--text);
+    }
+    .mode-btn:hover, .mode-btn.selected {
+      border-color: var(--accent); background: #1e2240;
+    }
+    .mode-btn .mode-icon { font-size: 2rem; margin-bottom: 8px; }
+    .mode-btn .mode-name { font-weight: 700; font-size: 1rem; }
+    .mode-btn .mode-desc { font-size: .78rem; color: var(--muted); margin-top: 4px; }
 
-  .container {
-    width: 100%;
-    max-width: 780px;
-  }
+    .count-section { margin-bottom: 24px; }
+    .count-section h3 { font-size: .95rem; color: var(--muted); margin-bottom: 12px; }
+    .count-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .count-btn {
+      background: var(--card2); border: 2px solid var(--border);
+      border-radius: 8px; padding: 8px 18px; cursor: pointer;
+      font-size: .9rem; color: var(--text); transition: all .2s;
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+    }
+    .count-btn:hover, .count-btn.selected {
+      border-color: var(--accent2); background: #1e1e38; color: var(--accent2);
+    }
+    .count-btn .count-tag {
+      font-size: .68rem; color: var(--yellow); font-weight: 700;
+    }
+    .count-btn.selected .count-tag { color: var(--yellow); }
 
-  /* ── HEADER ── */
-  .quiz-header {
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 22px 28px 18px;
-    margin-bottom: 18px;
-    box-shadow: 0 1px 6px rgba(0,0,0,.4);
-    border: 1px solid var(--border);
-  }
-  .quiz-header h1 {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--primary);
-    margin-bottom: 4px;
-  }
-  .quiz-header .sub {
-    font-size: .85rem;
-    color: var(--muted);
-    margin-bottom: 14px;
-  }
+    /* ── BUTTONS ── */
+    .btn {
+      border: none; border-radius: 10px; padding: 12px 28px;
+      font-size: 1rem; font-weight: 600; cursor: pointer; transition: all .2s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+    }
+    .btn-primary:hover { opacity: .88; transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent; border: 2px solid var(--border); color: var(--muted);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+    .btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
 
-  .progress-wrap {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .progress-track {
-    flex: 1;
-    height: 8px;
-    background: var(--border);
-    border-radius: 99px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--primary-dark), var(--primary));
-    border-radius: 99px;
-    transition: width .4s ease;
-  }
-  .progress-label {
-    font-size: .82rem;
-    color: var(--muted);
-    white-space: nowrap;
-    min-width: 60px;
-    text-align: right;
-  }
+    /* ── PROGRESS ── */
+    .progress-bar-wrap {
+      background: var(--card2); border-radius: 99px;
+      height: 8px; margin-bottom: 14px; overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%; border-radius: 99px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width .4s ease;
+    }
+    .progress-info {
+      display: flex; justify-content: space-between;
+      font-size: .8rem; color: var(--muted); margin-bottom: 18px;
+    }
 
-  .score-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--primary-light);
-    color: var(--primary);
-    border-radius: 99px;
-    padding: 4px 12px;
-    font-size: .82rem;
-    font-weight: 600;
-    margin-top: 10px;
-    border: 1px solid var(--primary-dark);
-  }
+    /* ── QUESTION CARD ── */
+    .q-card {
+      background: var(--card); border-radius: var(--radius);
+      padding: 28px 26px; box-shadow: var(--shadow); margin-bottom: 16px;
+    }
+    .q-num { font-size: .8rem; color: var(--accent2); font-weight: 700; margin-bottom: 10px; }
+    .q-text { font-size: 1.08rem; font-weight: 600; line-height: 1.55; margin-bottom: 22px; }
+    .q-stem { color: var(--muted); font-size: .88rem; margin-bottom: 14px; font-style: italic; }
 
-  /* ── SCREENS ── */
-  .screen { display: none; }
-  .screen.active { display: block; }
+    /* ── CHOICES (en-bloc) ── */
+    .choices { display: flex; flex-direction: column; gap: 10px; }
+    .choice-btn {
+      background: var(--card2); border: 2px solid var(--border);
+      border-radius: 10px; padding: 14px 16px; text-align: left;
+      cursor: pointer; font-size: .95rem; color: var(--text);
+      transition: all .2s; display: flex; align-items: center; gap: 10px;
+    }
+    .choice-btn:hover:not(:disabled) { border-color: var(--accent); background: #1e2240; }
+    .choice-btn .cb-letter {
+      background: var(--border); border-radius: 6px;
+      padding: 2px 8px; font-size: .78rem; font-weight: 700; flex-shrink: 0;
+    }
+    .choice-btn.selected  { border-color: var(--accent); background: #1e2240; }
+    .choice-btn.correct   { border-color: var(--green); background: #0d2e1a; }
+    .choice-btn.incorrect { border-color: var(--red);   background: #2e0d0d; }
+    .choice-btn.missed    { border-color: var(--yellow); background: #2e2000; }
+    .choice-btn:disabled  { cursor: default; }
 
-  /* ── START SCREEN ── */
-  .start-card {
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 36px 32px;
-    box-shadow: 0 1px 6px rgba(0,0,0,.4);
-    text-align: center;
-    border: 1px solid var(--border);
-  }
-  .start-card h2 { font-size: 1.5rem; margin-bottom: 8px; color: var(--primary); }
-  .start-card p { color: var(--muted); margin-bottom: 28px; line-height: 1.6; }
+    /* ── TRUE/FALSE ── */
+    .tf-statement {
+      background: var(--card2); border: 2px solid var(--border);
+      border-radius: 10px; padding: 18px 20px; margin-bottom: 18px;
+      font-size: 1rem; line-height: 1.55;
+    }
+    .tf-stem  { font-size: .82rem; color: var(--muted); margin-bottom: 6px; }
+    .tf-claim { font-weight: 600; }
+    .tf-btn-row { display: flex; gap: 14px; justify-content: center; margin-bottom: 14px; }
+    .tf-btn {
+      flex: 1; max-width: 180px; padding: 14px; border-radius: 10px;
+      font-size: 1rem; font-weight: 700; border: 2px solid var(--border);
+      background: var(--card2); color: var(--text); cursor: pointer; transition: all .2s;
+    }
+    .tf-btn:hover:not(:disabled) { border-color: var(--accent); }
+    .tf-btn.correct   { border-color: var(--green); background: #0d2e1a; color: var(--green); }
+    .tf-btn.incorrect { border-color: var(--red);   background: #2e0d0d; color: var(--red); }
+    .tf-btn:disabled  { cursor: default; }
+    .feedback-row {
+      text-align: center; font-weight: 700; font-size: 1rem;
+      min-height: 24px; margin-bottom: 8px;
+    }
+    .feedback-row.ok  { color: var(--green); }
+    .feedback-row.err { color: var(--red); }
+    .tf-countdown { text-align: center; color: var(--muted); font-size: .85rem; margin-top: 6px; }
+    .tf-countdown-bar {
+      height: 4px; background: var(--border); border-radius: 99px;
+      margin-top: 6px; overflow: hidden;
+    }
+    .tf-countdown-fill {
+      height: 100%; background: var(--accent);
+      border-radius: 99px; width: 100%;
+      transition: width 0.5s linear;
+    }
 
-  .section-label {
-    margin-bottom: 10px;
-    font-weight: 600;
-    font-size: .88rem;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: .05em;
-  }
+    /* ── BTN ROW ── */
+    .btn-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 
-  .count-row {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-bottom: 32px;
-    flex-wrap: wrap;
-  }
-  .count-btn {
-    padding: 9px 22px;
-    border-radius: 99px;
-    border: 2px solid var(--border);
-    background: var(--bg2);
-    cursor: pointer;
-    font-weight: 600;
-    font-size: .9rem;
-    color: var(--muted);
-    transition: all .2s;
-  }
-  .count-btn:hover { border-color: var(--primary); color: var(--primary); }
-  .count-btn.selected {
-    border-color: var(--primary);
-    color: var(--primary);
-    background: var(--primary-light);
-  }
+    /* ── RESULT ── */
+    .result-card {
+      background: var(--card); border-radius: var(--radius);
+      padding: 36px 28px; box-shadow: var(--shadow); text-align: center;
+    }
+    .result-emoji { font-size: 3.5rem; margin-bottom: 10px; }
+    .result-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; }
+    .result-sub   { color: var(--muted); margin-bottom: 28px; font-size: .95rem; }
+    .percent-ring { position: relative; display: inline-block; margin-bottom: 24px; }
+    .ring-bg   { fill: none; stroke: var(--card2); stroke-width: 10; }
+    .ring-fill { fill: none; stroke: var(--accent); stroke-width: 10;
+                 stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; }
+    .ring-text {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      font-size: 1.5rem; font-weight: 800; color: var(--accent);
+    }
+    .stats-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 28px; flex-wrap: wrap; }
+    .stat-box { background: var(--card2); border-radius: 10px; padding: 14px 22px; min-width: 90px; }
+    .stat-num { font-size: 1.8rem; font-weight: 800; }
+    .stat-lbl { font-size: .75rem; color: var(--muted); margin-top: 2px; }
+    .s-total   .stat-num { color: var(--accent); }
+    .s-correct .stat-num { color: var(--green); }
+    .s-wrong   .stat-num { color: var(--red); }
+    .result-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 28px; }
+    .wrong-list { text-align: left; }
+    .wrong-list h3 { font-size: 1rem; color: var(--red); margin-bottom: 12px; }
+    .wrong-item {
+      background: var(--card2); border-radius: 8px; padding: 12px 14px;
+      margin-bottom: 8px; font-size: .88rem; border-left: 3px solid var(--red);
+    }
+    .wrong-item .wi-q { color: var(--muted); margin-bottom: 4px; font-size: .8rem; }
+    .wrong-item .wi-a { font-weight: 600; }
+    .wi-correct { color: var(--green); }
+    .wi-wrong   { color: var(--red); }
 
-  /* ── QUESTION CARD ── */
-  .question-card {
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 30px 28px 24px;
-    box-shadow: 0 1px 6px rgba(0,0,0,.4);
-    margin-bottom: 18px;
-    border: 1px solid var(--border);
-  }
-  .q-number {
-    font-size: .8rem;
-    color: var(--muted);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    margin-bottom: 10px;
-  }
-  .q-text {
-    font-size: 1.08rem;
-    font-weight: 600;
-    line-height: 1.55;
-    margin-bottom: 24px;
-    color: var(--text);
-  }
-
-  .options-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .option-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 14px 16px;
-    border: 2px solid var(--border);
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all .2s;
-    user-select: none;
-    background: var(--bg2);
-  }
-  .option-item:hover { border-color: var(--primary); background: var(--primary-light); }
-  .option-item.checked { border-color: var(--primary); background: var(--primary-light); }
-
-  .option-item input[type=checkbox] {
-    width: 18px; height: 18px;
-    accent-color: var(--primary);
-    cursor: pointer;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-  .option-text { font-size: .95rem; line-height: 1.5; color: var(--text); }
-
-  .option-item.correct-ans {
-    border-color: var(--success) !important;
-    background: var(--success-light) !important;
-  }
-  .option-item.wrong-ans {
-    border-color: var(--danger) !important;
-    background: var(--danger-light) !important;
-  }
-  .option-item.missed-ans {
-    border-color: var(--warning) !important;
-    background: var(--warning-light) !important;
-  }
-  .option-item.disabled { cursor: default; pointer-events: none; }
-
-  .feedback-row {
-    display: none;
-    align-items: center;
-    gap: 10px;
-    margin-top: 18px;
-    padding: 12px 16px;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: .92rem;
-  }
-  .feedback-row.correct { background: var(--success-light); color: var(--success); border: 1px solid var(--success); }
-  .feedback-row.wrong { background: var(--danger-light); color: var(--danger); border: 1px solid var(--danger); }
-
-  /* ── BUTTONS ── */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 11px 26px;
-    border-radius: 99px;
-    border: none;
-    font-weight: 700;
-    font-size: .95rem;
-    cursor: pointer;
-    transition: all .2s;
-  }
-  .btn-primary {
-    background: var(--primary-dark);
-    color: #fff;
-  }
-  .btn-primary:hover { background: var(--primary); }
-  .btn-primary:disabled { opacity: .3; cursor: default; }
-  .btn-outline {
-    background: transparent;
-    border: 2px solid var(--primary-dark);
-    color: var(--primary);
-  }
-  .btn-outline:hover { background: var(--primary-light); }
-  .btn-outline:disabled { opacity: .3; cursor: default; }
-
-  .btn-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  /* ── RESULT SCREEN ── */
-  .result-card {
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 40px 32px;
-    box-shadow: 0 1px 6px rgba(0,0,0,.4);
-    text-align: center;
-    border: 1px solid var(--border);
-  }
-  .result-emoji { font-size: 3.5rem; margin-bottom: 12px; }
-  .result-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; color: var(--text); }
-  .result-sub { color: var(--muted); margin-bottom: 28px; font-size: .95rem; }
-
-  .stats-row {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    margin-bottom: 32px;
-    flex-wrap: wrap;
-  }
-  .stat-box {
-    background: var(--bg2);
-    border-radius: 12px;
-    padding: 16px 24px;
-    min-width: 110px;
-    border: 1px solid var(--border);
-  }
-  .stat-num { font-size: 2rem; font-weight: 800; }
-  .stat-lbl { font-size: .78rem; color: var(--muted); margin-top: 2px; }
-  .stat-box.s-correct .stat-num { color: var(--success); }
-  .stat-box.s-wrong .stat-num { color: var(--danger); }
-  .stat-box.s-total .stat-num { color: var(--primary); }
-
-  .percent-ring {
-    width: 130px;
-    height: 130px;
-    margin: 0 auto 24px;
-    position: relative;
-  }
-  .percent-ring svg { transform: rotate(-90deg); }
-  .percent-ring .ring-bg { fill: none; stroke: var(--border); stroke-width: 10; }
-  .percent-ring .ring-fill { fill: none; stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset .8s ease; }
-  .percent-ring .ring-text {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.6rem;
-    font-weight: 800;
-    color: var(--text);
-  }
-
-  .result-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    align-items: center;
-  }
-  .result-actions .btn { min-width: 260px; justify-content: center; }
-
-  /* wrong list */
-  .wrong-list {
-    margin-top: 32px;
-    text-align: left;
-  }
-  .wrong-list h3 {
-    font-size: 1rem;
-    color: var(--danger);
-    margin-bottom: 14px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid var(--danger-light);
-  }
-  .wrong-item {
-    background: var(--bg2);
-    border-radius: 10px;
-    padding: 12px 16px;
-    margin-bottom: 10px;
-    font-size: .87rem;
-    line-height: 1.6;
-    border: 1px solid var(--border);
-  }
-  .wrong-item strong { display: block; margin-bottom: 4px; color: var(--text); }
-  .wi-correct { color: var(--success); font-weight: 600; }
-  .wi-wrong { color: var(--danger); font-weight: 600; }
-
-  @media(max-width:500px){
-    .question-card { padding: 22px 16px 18px; }
-    .start-card { padding: 24px 16px; }
-    .result-card { padding: 28px 16px; }
-  }
-</style>
+    @media(max-width:500px){
+      .mode-grid { grid-template-columns: 1fr; }
+      .q-card { padding: 20px 16px; }
+    }
+  </style>
 </head>
 <body>
-<div class="container">
+<div class="app">
 
   <!-- HEADER -->
   <div class="quiz-header">
-    <h1>⚖️ Správne právo procesné I</h1>
-    <div class="sub">Kvíz na zápočet – zaškrtni pravdivé tvrdenia (môže byť jedno, oboje alebo žiadne)</div>
-    <div class="progress-wrap">
-      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-      <div class="progress-label" id="progressLabel">0 / 0</div>
+    <div class="logo">⚖️</div>
+    <div>
+      <h1>Správne právo procesné – 1. časť</h1>
+      <p>Interaktívny kvíz · 96 otázok · 192 tvrdení</p>
     </div>
-    <div class="score-badge" id="scoreBadge">⭐ Skóre: 0</div>
   </div>
 
-  <!-- START SCREEN -->
-  <div class="screen active" id="screenStart">
-    <div class="start-card">
-      <h2>Vyber režim kvízu</h2>
-      <p>Každá otázka má dve tvrdenia. Body získaš iba vtedy, ak správne zaškrtneš <em>aj</em> nepravdivé <em>aj</em> pravdivé tvrdenia – všetko alebo nič.</p>
-
-      <div class="section-label">Počet otázok</div>
-      <div class="count-row">
-        <button class="count-btn" data-count="15" onclick="selectCount(this)">15</button>
-        <button class="count-btn" data-count="30" onclick="selectCount(this)">30</button>
-        <button class="count-btn selected" data-count="40" onclick="selectCount(this)">40</button>
-        <button class="count-btn" data-count="60" onclick="selectCount(this)">60</button>
-        <button class="count-btn" data-count="all" onclick="selectCount(this)">Všetky</button>
+  <!-- ① MODE -->
+  <div class="screen active" id="screenMode">
+    <div class="mode-card">
+      <h2>Vyber režim</h2>
+      <p>Zvol si typ otázok a počet, ktorý chceš precvičiť</p>
+      <div class="mode-grid">
+        <div class="mode-btn selected" onclick="selectMode('bloc')" id="modeBloc">
+          <div class="mode-icon">📋</div>
+          <div class="mode-name">En-bloc</div>
+          <div class="mode-desc">Vyber správne tvrdenia zo skupiny</div>
+        </div>
+        <div class="mode-btn" onclick="selectMode('tf')" id="modeTF">
+          <div class="mode-icon">⚡</div>
+          <div class="mode-name">Pravda / Nepravda</div>
+          <div class="mode-desc">Rýchle hodnotenie každého tvrdenia</div>
+        </div>
       </div>
-
-      <button class="btn btn-primary" onclick="startQuiz()" style="font-size:1rem;padding:13px 40px">
+      <div class="count-section">
+        <h3 id="countTitle">Počet otázok</h3>
+        <div class="count-grid" id="countGrid"></div>
+      </div>
+      <button class="btn btn-primary" onclick="startQuiz()" style="width:100%;padding:14px">
         🚀 Spustiť kvíz
       </button>
     </div>
   </div>
 
-  <!-- QUESTION SCREEN -->
-  <div class="screen" id="screenQuestion">
-    <div class="question-card">
-      <div class="q-number" id="qNumber">Otázka 1 z 40</div>
-      <div class="q-text" id="qText"></div>
-      <div class="options-list" id="optionsList"></div>
-      <div class="feedback-row" id="feedbackRow"></div>
+  <!-- ② QUIZ -->
+  <div class="screen" id="screenQuiz">
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
     </div>
-    <div class="btn-row">
+    <div class="progress-info">
+      <span id="progText">Otázka 1 / 20</span>
+      <span id="scoreText">✅ 0 &nbsp; ❌ 0</span>
+    </div>
+
+    <div class="q-card" id="qCard">
+      <div class="q-num" id="qNum"></div>
+      <div class="q-text" id="qText"></div>
+
+      <!-- En-bloc -->
+      <div id="blocPanel">
+        <div class="q-stem">Označ všetky PRAVDIVÉ tvrdenia (môže ich byť viac):</div>
+        <div class="choices" id="choicesList"></div>
+      </div>
+
+      <!-- T/F -->
+      <div id="tfPanel" style="display:none">
+        <div class="tf-statement">
+          <div class="tf-stem"  id="tfStem"></div>
+          <div class="tf-claim" id="tfClaim"></div>
+        </div>
+        <div class="tf-btn-row">
+          <button class="tf-btn" id="tfBtnTrue"  onclick="answerTF(true)">✅ Pravda</button>
+          <button class="tf-btn" id="tfBtnFalse" onclick="answerTF(false)">❌ Nepravda</button>
+        </div>
+        <div class="feedback-row" id="feedbackRowTF"></div>
+        <div class="tf-countdown" id="tfCountdown" style="display:none">
+          <span>Ďalšie tvrdenie…</span>
+          <div class="tf-countdown-bar">
+            <div class="tf-countdown-fill" id="tfCountdownFill"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row" id="mainBtnRow">
       <button class="btn btn-outline" onclick="skipQuestion()">⏭ Preskočiť</button>
       <button class="btn btn-primary" id="btnConfirm" onclick="confirmAnswer()">✔ Potvrdiť</button>
       <button class="btn btn-primary" id="btnNext" onclick="nextQuestion()" style="display:none">Ďalej →</button>
     </div>
   </div>
 
-  <!-- RESULT SCREEN -->
+  <!-- ③ RESULT -->
   <div class="screen" id="screenResult">
     <div class="result-card">
       <div class="result-emoji" id="resultEmoji">🎉</div>
       <div class="result-title" id="resultTitle">Výsledok</div>
-      <div class="result-sub" id="resultSub"></div>
-
+      <div class="result-sub"   id="resultSub"></div>
       <div class="percent-ring">
         <svg viewBox="0 0 100 100" width="130" height="130">
-          <circle class="ring-bg" cx="50" cy="50" r="45"/>
+          <circle class="ring-bg"   cx="50" cy="50" r="45"/>
           <circle class="ring-fill" id="ringFill" cx="50" cy="50" r="45"
-            stroke-dasharray="282.7"
-            stroke-dashoffset="282.7"/>
+            stroke-dasharray="282.7" stroke-dashoffset="282.7"/>
         </svg>
         <div class="ring-text" id="ringText">0%</div>
       </div>
-
       <div class="stats-row">
-        <div class="stat-box s-total">
-          <div class="stat-num" id="statTotal">0</div>
-          <div class="stat-lbl">Celkom otázok</div>
-        </div>
-        <div class="stat-box s-correct">
-          <div class="stat-num" id="statCorrect">0</div>
-          <div class="stat-lbl">Správne</div>
-        </div>
-        <div class="stat-box s-wrong">
-          <div class="stat-num" id="statWrong">0</div>
-          <div class="stat-lbl">Chybné</div>
-        </div>
+        <div class="stat-box s-total">  <div class="stat-num" id="statTotal">0</div>   <div class="stat-lbl">Celkom</div></div>
+        <div class="stat-box s-correct"><div class="stat-num" id="statCorrect">0</div> <div class="stat-lbl">Správne</div></div>
+        <div class="stat-box s-wrong">  <div class="stat-num" id="statWrong">0</div>   <div class="stat-lbl">Chybné</div></div>
       </div>
-
       <div class="result-actions">
         <button class="btn btn-primary" onclick="restartAll()">🔄 Zopakovať celý test</button>
         <button class="btn btn-outline" onclick="restartWrong()" id="btnWrongOnly">🔁 Zopakovať len chybné</button>
-        <button class="btn btn-outline" onclick="goToStart()">⚙️ Zmeniť nastavenia</button>
+        <button class="btn btn-outline" onclick="backToMode()">⚙️ Zmeniť nastavenia</button>
       </div>
-
       <div class="wrong-list" id="wrongList"></div>
     </div>
   </div>
 
 </div>
-
 <script>
+/* ════════════════════════════════════════════
+   96 OTÁZOK
+════════════════════════════════════════════ */
 const ALL_QUESTIONS = [
   ["Ustanovenia správneho poriadku, ktoré sa týkajú prvostupňového konania, sa vzťahujú aj na",
     ["konanie o preskúmaní rozhodnutia", true],
     ["konanie o výkone rozhodnutia", true]],
-
   ["Správne konanie môže začať",
     ["ex offo alebo na návrh", true],
     ["aj oboma uvedenými spôsobmi", true]],
-
   ["Ak sa správne konanie začína ex offo, takéto konanie je začaté dňom, kedy",
     ["návrh dôjde správnemu orgánu", false],
     ["návrh dôjde príslušnému správnemu orgánu", false]],
-
   ["Medzi procesné inštitúty slúžiace na zabezpečenie priebehu a účelu správneho konania patrí",
     ["poriadkové opatrenia", true],
     ["dokazovanie", false]],
-
   ["Formou priameho vynútenia povinnosti sú/je",
     ["poriadkové opatrenia", false],
     ["predvedenie", true]],
-
   ["Predvolať možno",
     ["len účastníka a svedka", false],
     ["kohokoľvek, koho osobná účasť je nevyhnutná", true]],
-
   ["Predviesť možno",
     ["len účastníka a svedka", true],
     ["kohokoľvek, koho osobná účasť je nevyhnutná", false]],
-
   ["Ak bol účastník raz predvolaný",
     ["možno mu uložiť poriadkovú pokutu", true],
     ["možno ho predviesť", false]],
-
   ["Podstatou predbežného opatrenia môže byť",
     ["stabilizácia pomerov medzi účastníkmi", true],
     ["zabezpečenie prítomnosti určitej osoby", false]],
-
   ["Dožiadaný správny orgán môže",
     ["vydať rozhodnutie", false],
     ["vykonať konkrétny úkon na účely správneho konania", true]],
-
   ["Účastník konania môže",
     ["navrhovať, prípadne aj obstarávať dôkazné prostriedky", true],
     ["aj vykonávať dôkazné prostriedky", false]],
-
   ["Medzi dôkazné prostriedky radíme",
     ["čestné vyhlásenia", false],
     ["SMSky, maily", true]],
-
   ["Svedok musí byť",
     ["schopný vnímať určité javy/predmety a reprodukovať ich", true],
     ["plne spôsobilý na právne úkony", false]],
-
   ["Znalcom v konkrétnom konaní môže byť",
     ["zapísaný znalecký ústav alebo zapísaná znalecká organizácia", true],
     ["aj nezapísaný odborník", true]],
-
   ["Predmetom obhliadky môže byť",
     ["nehnuteľnosť", true],
     ["listina", true]],
-
   ["Ak sa v konaní vyskytne trvalo neodstrániteľná prekážka, konanie musí byť",
     ["prerušené", false],
     ["zastavené", true]],
-
   ["Správne konanie môže skončiť",
     ["vydaním rozhodnutia / schválením zmieru", true],
     ["jeho zastavením", true]],
-
   ["Meritórnym rozhodnutím je rozhodnutie vo veci samej – napr.",
     ["stavebné povolenie", true],
     ["rozhodnutie o vylúčení zamestnanca správneho orgánu", false]],
-
   ["Lehoty na rozhodnutie",
     ["štandardná lehota je 45 dní", false],
     ["vo zvlášť zložitých prípadoch správny orgán rozhodne do 90 dní", false]],
-
   ["Za nečinnosť správneho orgánu sa považuje, ak správny orgán",
     ["nevydá rozhodnutie", true],
     ["na základe infožiadosti neposkytne informácie", false]],
-
   ["Odvolanie a rozklad sú",
     ["riadne opravné prostriedky", true],
     ["mimoriadne opravné prostriedky", false]],
-
   ["Riadne opravné prostriedky",
     ["v prípade riadneho a včasného uplatnenia má ÚK na prieskum právny nárok", true],
     ["smerujú proti neprávoplatným rozhodnutiam správnych orgánov", true]],
-
   ["Medzi mimoriadne opravné prostriedky proti rozhodnutiu správneho orgánu patrí",
     ["odvolanie, obnova konania a protest prokurátora", false],
     ["rozklad, preskúmanie mimo odvolacieho konania, protest prokurátora", false]],
-
   ["V odvolacom konaní podľa správneho poriadku sa uplatňuje",
     ["apelačný princíp", true],
     ["kasačný princíp", false]],
-
   ["Aktívne procesne legitimovaným na podanie odvolania podľa správneho poriadku je",
     ["iba účastník konania a jeho zástupca", true],
     ["aj zúčastnená osoba", false]],
-
   ["Odvolanie v správnom konaní",
     ["je možné podať iba proti taxatívne vymedzeným rozhodnutiam", false],
     ["je možné podať zásadne proti každému rozhodnutiu", true]],
-
   ["Odvolanie v správnom konaní nemožno podať",
     ["proti rozhodnutiu o prerušení konania", true],
     ["aj ak sa účastník konania dobrovoľne a výslovne vzdal práva podať odvolanie", true]],
-
   ["Odvolanie podľa správneho poriadku",
     ["sa podáva na odvolací orgán", false],
     ["je potrebné podať v odvolacej lehote 15 dní odo dňa vydania rozhodnutia", false]],
-
   ["Inštitút autoremedúry znamená",
     ["odvolanie má odkladný účinok", false],
     ["o odvolaní bude zásadne rozhodovať odvolací orgán", false]],
-
   ["Odvolací orgán",
     ["preskúmava napadnuté rozhodnutie v celom rozsahu", true],
     ["nemôže napadnuté rozhodnutie zrušiť a vrátiť prvostupňovému orgánu", false]],
-
   ["Rozklad",
     ["je mimoriadny opravný prostriedok proti rozhodnutiam ústredného orgánu štátnej správy", false],
     ["rozhoduje o ňom rozkladová komisia", false]],
-
   ["Obnova konania",
     ["môže začať iba na návrh účastníka konania", false],
     ["prebieha v dvoch štádiách", true]],
-
   ["Medzi podmienky povolenia alebo nariadenia obnovy konania nepatrí",
     ["existencia niektorého z dôvodov na obnovu konania", false],
     ["podanie návrhu / povolenie obnovy v zákonnej subjektívnej a objektívnej lehote", false]],
-
   ["Medzi podmienky povolenia alebo nariadenia obnovy konania patrí",
     ["aj neexistencia zákonných dôvodov neprípustnosti obnovy konania", true],
     ["existencia neprávoplatného rozhodnutia", false]],
-
   ["Obnovu konania povoľuje alebo nariaďuje",
     ["vždy iba druhostupňový orgán", false],
     ["vždy iba prvostupňový orgán", false]],
-
   ["Preskúmanie rozhodnutia mimo odvolacieho konania",
     ["sa začína aj na základe dispozičnej zásady", false],
     ["je potrebné začať najneskôr do troch rokov od právoplatnosti rozhodnutia", true]],
-
   ["Preskúmanie rozhodnutia mimo odvolacieho konania",
     ["uskutočňuje zásadne orgán, ktorý napadnuté rozhodnutie vydal", false],
     ["je zamerané na preskúmanie právnych vád rozhodnutia", true]],
-
   ["Konanie o proteste prokurátora",
     ["je upravené v správnom poriadku", false],
     ["sa začína na návrh účastníka konania", false]],
-
   ["Protest prokurátora",
     ["nemá zásadne suspenzívny účinok", true],
     ["sa podáva aj pre skutkové vady rozhodnutia", false]],
-
   ["V konaní o proteste je účastníkom konania",
     ["aj správny orgán, ktorý napadnuté rozhodnutie vydal", false],
     ["zásadne ten, kto bol alebo mal byť účastníkom pôvodného administratívneho konania", true]],
-
   ["Správne súdnictvo",
     ["má svoj ústavný základ", true],
     ["na niektoré konania sa aplikuje aj Európsky dohovor o ľudských právach", true]],
-
   ["Zákonná úprava správneho súdnictva je obsiahnutá v",
     ["Občianskom súdnom poriadku (OSP)", false],
     ["Správnom súdnom poriadku (SSP)", true]],
-
   ["Správnym súdnictvom rozumieme",
     ["súdnu kontrolu zákonnosti správnych aktov", true],
     ["preskúmavanie správnych aktov", false]],
-
   ["Správne súdy skúmajú",
     ["vhodnosť rozhodnutia", false],
     ["zákonnosť rozhodnutia", false]],
-
   ["Konanie pred správnym súdom sa riadi",
     ["princípmi uvedenými v Správnom súdnom poriadku", true],
     ["aj princípmi, na ktorých spočíva Civilný sporový poriadok", true]],
-
   ["Správny súdny poriadok upravuje",
     ["všeobecnú správnu žalobu", true],
     ["aj žalobu vo veciach správneho trestania", true]],
-
   ["Pre určenie miestnej príslušnosti je primárne rozhodné sídlo",
     ["žalovaného orgánu verejnej správy", false],
     ["orgánu verejnej správy, ktorý rozhodol v prvom stupni", true]],
-
   ["Konanie pred správnym súdom možno začať",
     ["ex offo", false],
     ["na návrh", true]],
-
   ["Konanie pred správnym súdom je",
     ["zásadne verejné", true],
     ["zásadne ústne", false]],
-
   ["Najvyšší správny súd rozhoduje",
     ["o všeobecnej správnej žalobe", false],
     ["v osobitných konaniach, v prípadoch stanovených SSP", true]],
-
   ["Súdny prieskum rozhodnutí",
     ["súdnemu prieskumu podliehajú všetky rozhodnutia orgánov verejnej správy", false],
     ["SSP výslovne stanovuje, aké rozhodnutia správne súdy nepreskúmavajú", true]],
-
   ["Aktívne procesne legitimovaným môže byť",
     ["akákoľvek FO/PO", false],
     ["aj opomenutý účastník – aj prokurátor", true]],
-
   ["Prokurátor môže",
     ["podať žalobu proti nečinnosti", true],
     ["vstúpiť do ktoréhokoľvek konania pred správnym súdom", true]],
-
   ["Ak žalobu podala FO/PO, pasívne procesne legitimovaným bude OVS, ktorý rozhodol",
     ["o riadnom opravnom prostriedku / vydal rozhodnutie", true],
     ["v poslednom stupni", false]],
-
   ["Ak žalobu podáva FO/PO, lehota na jej podanie je podľa SSP dva mesiace od",
     ["oznámenia rozhodnutia OVS", true],
     ["od právoplatnosti rozhodnutia OVS", false]],
-
   ["V správnej žalobe je potrebné uviesť",
     ["označenie druhu žaloby", true],
     ["žalobný návrh = petit", true]],
-
   ["Rozhodnutie o správnej žalobe – správny súd ju môže",
     ["rozsudkom zamietnuť", true],
     ["vyhovieť jej a napadnuté rozhodnutie rozsudkom zrušiť", true]],
-
   ["Voči rozhodnutiu o správnej žalobe prichádzajú do úvahy nasledovné opravné prostriedky",
     ["odvolanie", false],
     ["kasačná sťažnosť aj žaloba na obnovu konania", true]],
-
   ["Na prejednávanie priestupkov sa vzťahuje ochrana práva na spravodlivý proces podľa Európskeho dohovoru o ĽP",
     ["za každých okolností", false],
     ["ak sú naplnené tzv. Engelovské kritériá", true]],
-
   ["Zákon o priestupkoch upravuje",
     ["konanie o priestupkoch", true],
     ["aj hmotnoprávne ustanovenia", true]],
-
   ["Použitie správneho poriadku je v konaní o priestupkoch",
     ["vylúčené", false],
     ["subsidiárne", true]],
-
   ["Priestupkové konanie",
     ["najprv prebieha objasňovanie priestupkov, následne ich prejednávanie", true],
     ["najprv prebieha prejednávanie priestupkov, následne ich objasňovanie", false]],
-
   ["Na objasňovanie priestupkov",
     ["sa subsidiárne vzťahuje správny poriadok", false],
     ["sa ani podporne nevzťahujú ustanovenia správneho poriadku", true]],
-
   ["Objasňovanie priestupkov vykonávajú",
     ["správne orgány príslušné prejednať zistené priestupky", true],
     ["v zákonom vymedzenom rozsahu aj napr. orgány PZ, ZVJS, obecnej polície", true]],
-
   ["Ak sa pri objasňovaní priestupku zistí, že nie je podozrenie z priestupku",
     ["SO odloží vec záznamom", true],
     ["SO uloží vec záznamom", false]],
-
   ["Ak sa pri objasňovaní priestupku nepodarí zistiť skutočnosti svedčiace o tom, že priestupok spáchala konkrétna osoba",
     ["SO odloží vec záznamom", false],
     ["SO uloží vec záznamom", true]],
-
   ["Ak sa pri objasňovaní priestupku zistí, že ide o trestný čin",
     ["správny orgán odovzdá vec príslušnému orgánu", true],
     ["správny orgán postúpi vec príslušnému orgánu", false]],
-
   ["Ak sa v priebehu prejednania priestupku zistí, že ide o trestný čin",
     ["správny orgán odovzdá vec príslušnému orgánu", false],
     ["správny orgán postúpi vec príslušnému orgánu", true]],
-
   ["Dôvodom na odloženie veci pred začatím konania je",
     ["litispendencia", true],
     ["res iudicata", true]],
-
   ["Ak SO zistí, že ide o res iudicata až po začatí konania",
     ["vec postúpi", false],
     ["konanie zastaví", true]],
-
   ["Prejednávanie priestupkov",
     ["všetky priestupky možno prejednať ex offo", false],
     ["nie všetky priestupky možno prejednať ex offo", true]],
-
   ["SO v konaní o priestupku nariadi ústne pojednávanie",
     ["ak to vyžaduje povaha veci", false],
     ["obligatórne", true]],
-
   ["Ústne pojednávanie",
     ["nemôže prebehnúť v neprítomnosti obvineného z priestupku", false],
     ["môže vyústiť do ukončenia veci zmierom s navrhovateľom", true]],
-
   ["Meritórne rozhodnutie o priestupku je rozhodnutím",
     ["konštitutívnym", true],
     ["deklaratórnym", true]],
-
   ["Voči rozhodnutiu o priestupku sú prípustné nasledovné opravné prostriedky",
     ["odvolanie alebo zrušenie rozhodnutia", true],
     ["aj súdny prieskum", true]],
-
   ["Odvolanie je možné podať aj voči",
     ["bloku", false],
     ["rozkazu", false]],
-
   ["Voči rozkazu je možné podať",
     ["odvolanie", false],
     ["odpor", true]],
-
   ["V blokovom konaní prichádzajú do úvahy nasledovné sankcie",
     ["pokuta", true],
     ["napomenutie", false]],
-
   ["Výkon správnych rozhodnutí",
     ["je obligatórnou fázou správneho konania", false],
     ["je upravené v piatej časti správneho poriadku", true]],
-
   ["Podmienkou na nariadenie núteného výkonu správneho rozhodnutia",
     ["je aj existencia povinnosti uloženej niektorému z účastníkov konania", true],
     ["je aj predchádzajúce uloženie paričnej lehoty povinnému", true]],
-
   ["Podmienkou na nariadenie núteného výkonu správneho rozhodnutia",
     ["nie je existencia exekučného titulu", false],
     ["je aj nariadenie núteného výkonu v prekluzívnej dvojročnej lehote", false]],
-
   ["Podmienkou na nariadenie núteného výkonu správneho rozhodnutia",
     ["je aj existencia povinného subjektu", true],
     ["je aj existencia dôvodov neprípustnosti výkonu rozhodnutia", false]],
-
   ["Vykonateľnosť správneho rozhodnutia",
     ["je nevyhnutnou podmienkou nariadenia výkonu správneho rozhodnutia", true],
     ["nastáva výlučne vtedy, ak sa proti nemu nemožno odvolať", false]],
-
   ["Materiálnou podmienkou vykonateľnosti správneho rozhodnutia",
     ["je aj dodržanie zákonom predpísaných náležitostí na oznámenie rozhodnutia", false],
     ["je aj existencia objektívnej možnosti splniť uloženú povinnosť", true]],
-
   ["Vo vzťahu k začiatku výkonu správneho rozhodnutia sa uplatňuje",
     ["výlučne zásada dispozitívnosti", false],
     ["zásada dispozitívnosti alebo zásada oficiality", true]],
-
   ["Príslušným správnym orgánom na výkon rozhodnutia",
     ["je zásadne správny orgán, ktorý vo veci rozhodol v prvom stupni", true],
     ["je zásadne odvolací správny orgán", false]],
-
   ["Procesným právom povinného vo fáze výkonu rozhodnutia",
     ["je právo byť notifikovaný o začiatku výkonu rozhodnutia", true],
     ["nie je podať návrh na odklad výkonu rozhodnutia zo závažných dôvodov", false]],
-
   ["Upustiť od výkonu správneho rozhodnutia",
     ["je oprávnený správny orgán len na návrh povinného", false],
     ["je správny orgán oprávnený len z taxatívne vymedzených dôvodov", true]],
-
   ["Dôvodom na upustenie od výkonu správneho rozhodnutia",
     ["je aj zrušenie exekučného titulu, na základe ktorého začal výkon rozhodnutia", true],
     ["je aj dodatočné splnenie vymáhanej povinnosti", true]],
-
   ["Exekučný príkaz",
     ["je inštitút, ktorým sa nariaďuje (konkrétny) výkon rozhodnutia", true],
     ["doručuje sa výlučne iba povinnému", false]],
-
   ["Povinnosť správneho orgánu použiť pri výkone rozhodnutia iba prostriedky upravené v správnom poriadku je prejavom",
     ["zásady legality", true],
     ["zásady proporcionality", false]],
-
   ["Medzi spôsoby vymáhania peňažných plnení podľa správneho poriadku patrí",
     ["zrážky zo mzdy, prikázanie pohľadávky, predaj hnuteľných alebo nehnuteľných vecí", true],
     ["náhradný výkon, ukladanie peňažných pokút, priame vynútenie povinnosti", false]],
-
   ["Príkaz na vykonanie zrážok zo mzdy je správny orgán oprávnený doručiť",
     ["výlučne tomu, kto vypláca povinnému mzdu", false],
     ["aj tomu, kto vypláca povinnému náhradu za pracovný príjem", true]],
-
   ["O spôsobe výkonu správnej exekúcie v podobe predaja hnuteľných alebo nehnuteľných vecí platí, že",
     ["je podrobne upravený v správnom poriadku", false],
     ["je naň potrebné primerane použiť ustanovenia Exekučného poriadku", true]],
-
   ["Ak vzhľadom na povahu uloženej nepeňažnej povinnosti je ju povinný uskutočniť na náklad a nebezpečenstvo povinného niekto iný",
     ["ide o spôsob výkonu exekúcie v podobe prikázania pohľadávky", false],
     ["ide o spôsob výkonu exekúcie v podobe náhradného výkonu", true]],
-
   ["Ak náhradný výkon nie je podľa povahy veci možný alebo účelný, vymáha sa plnenie nepeňažnej povinnosti spôsobom",
     ["postupného ukladania pokút", true],
     ["priameho vynútenia uloženej povinnosti", false]],
 ];
 
-// ═══════════════════════════════════════════════════
-//  STATE
-// ═══════════════════════════════════════════════════
-let quizQuestions = [];
-let currentIndex = 0;
-let score = 0;
-let wrongQuestionsThisRun = [];
-let lastWrongPool = [];
-let selectedCount = 40;
-let repeatWrongMode = false;
+/* ════════════════════════════════════════════
+   STAV
+════════════════════════════════════════════ */
+let mode         = 'bloc';
+let countChoice  = 20;
+let questions    = [];
+let qIndex       = 0;
+let correct      = 0;
+let wrong        = 0;
+let wrongItems   = [];
+let tfItems      = [];
+let tfIdx        = 0;
+let tfCorrect    = 0;
+let tfWrong      = 0;
+let tfWrongItems = [];
+let tfTimer      = null;
+let confirmed    = false;
 
-// ═══════════════════════════════════════════════════
-//  HELPERS
-// ═══════════════════════════════════════════════════
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+/* ════════════════════════════════════════════
+   POČTY
+════════════════════════════════════════════ */
+// En-bloc: 20 (na teste), 50, všetky (96)
+const BLOC_COUNTS = [
+  { n: 20,  tag: '📝 počet na teste' },
+  { n: 50,  tag: null },
+  { n: 96,  tag: 'Všetky' },
+];
+// TF: 20, 50, 100, 150, všetky (192)
+const TF_COUNTS = [
+  { n: 20,  tag: null },
+  { n: 50,  tag: null },
+  { n: 100, tag: null },
+  { n: 150, tag: null },
+  { n: 192, tag: 'Všetky' },
+];
+
+function buildCountGrid() {
+  const grid   = document.getElementById('countGrid');
+  const counts = (mode === 'bloc') ? BLOC_COUNTS : TF_COUNTS;
+  const def    = (mode === 'bloc') ? 20 : 20;
+
+  // Skontroluj či countChoice je v aktuálnych možnostiach
+  const valid = counts.map(c => c.n);
+  if (!valid.includes(countChoice)) countChoice = def;
+
+  document.getElementById('countTitle').textContent =
+    mode === 'bloc' ? 'Počet otázok' : 'Počet tvrdení';
+
+  grid.innerHTML = '';
+  counts.forEach(({ n, tag }) => {
+    const b = document.createElement('button');
+    b.className = 'count-btn' + (n === countChoice ? ' selected' : '');
+
+    const label = tag === 'Všetky' ? `Všetky (${n})` : String(n);
+    b.innerHTML = `<span>${label}</span>` +
+      (tag && tag !== 'Všetky' ? `<span class="count-tag">${tag}</span>` : '');
+
+    b.onclick = () => {
+      countChoice = n;
+      document.querySelectorAll('.count-btn').forEach(x => x.classList.remove('selected'));
+      b.classList.add('selected');
+    };
+    grid.appendChild(b);
+  });
 }
 
-function selectCount(el) {
-  document.querySelectorAll('.count-btn').forEach(b => b.classList.remove('selected'));
-  el.classList.add('selected');
-  selectedCount = el.dataset.count === 'all' ? 'all' : parseInt(el.dataset.count);
+function selectMode(m) {
+  mode = m;
+  document.getElementById('modeBloc').classList.toggle('selected', m === 'bloc');
+  document.getElementById('modeTF').classList.toggle('selected', m === 'tf');
+  buildCountGrid();
 }
+
+/* ════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════ */
+window.onload = () => { buildCountGrid(); };
 
 function shuffle(arr) {
   const a = [...arr];
@@ -877,209 +707,299 @@ function shuffle(arr) {
   return a;
 }
 
-function updateProgress() {
-  const total = quizQuestions.length;
-  const done = currentIndex;
-  const pct = total ? Math.round((done / total) * 100) : 0;
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressLabel').textContent = done + ' / ' + total;
-  document.getElementById('scoreBadge').textContent = '⭐ Skóre: ' + score;
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
 
-// ═══════════════════════════════════════════════════
-//  START
-// ═══════════════════════════════════════════════════
-function startQuiz() {
-  repeatWrongMode = false;
-  let pool = shuffle(ALL_QUESTIONS);
-  if (selectedCount !== 'all') {
-    pool = pool.slice(0, Math.min(selectedCount, pool.length));
-  }
-  quizQuestions = pool;
-  currentIndex = 0;
-  score = 0;
-  wrongQuestionsThisRun = [];
-  updateProgress();
-  showScreen('screenQuestion');
-  renderQuestion();
-}
+/* ════════════════════════════════════════════
+   START
+════════════════════════════════════════════ */
+function startQuiz(pool) {
+  const src = pool || shuffle(ALL_QUESTIONS);
 
-function goToStart() {
-  showScreen('screenStart');
-  updateProgress();
-}
-
-function restartAll() {
-  showScreen('screenStart');
-  updateProgress();
-}
-
-function restartWrong() {
-  if (!lastWrongPool.length) return;
-  repeatWrongMode = true;
-  quizQuestions = shuffle(lastWrongPool);
-  currentIndex = 0;
-  score = 0;
-  wrongQuestionsThisRun = [];
-  updateProgress();
-  showScreen('screenQuestion');
-  renderQuestion();
-}
-
-// ═══════════════════════════════════════════════════
-//  RENDER QUESTION
-// ═══════════════════════════════════════════════════
-function renderQuestion() {
-  if (currentIndex >= quizQuestions.length) { showResult(); return; }
-  const q = quizQuestions[currentIndex];
-  document.getElementById('qNumber').textContent =
-    'Otázka ' + (currentIndex + 1) + ' z ' + quizQuestions.length;
-  document.getElementById('qText').textContent = q[0];
-
-  const list = document.getElementById('optionsList');
-  list.innerHTML = '';
-
-  [q[1], q[2]].forEach((opt, idx) => {
-    const item = document.createElement('label');
-    item.className = 'option-item';
-    item.innerHTML = `
-      <input type="checkbox" id="cb${idx}" />
-      <span class="option-text">${opt[0]}</span>`;
-    item.querySelector('input').addEventListener('change', () => {
-      item.classList.toggle('checked', item.querySelector('input').checked);
+  if (mode === 'tf') {
+    let all = [];
+    src.forEach(q => {
+      const stem = q[0];
+      for (let i = 1; i < q.length; i++) {
+        all.push({ stem, claim: q[i][0], correct: q[i][1] });
+      }
     });
-    list.appendChild(item);
-  });
-
-  const fb = document.getElementById('feedbackRow');
-  fb.style.display = 'none';
-  fb.className = 'feedback-row';
-  document.getElementById('btnConfirm').style.display = 'inline-flex';
-  document.getElementById('btnNext').style.display = 'none';
+    all = shuffle(all);
+    tfItems      = all.slice(0, Math.min(countChoice, all.length));
+    tfIdx        = 0;
+    tfCorrect    = 0;
+    tfWrong      = 0;
+    tfWrongItems = [];
+    show('screenQuiz');
+    document.getElementById('blocPanel').style.display  = 'none';
+    document.getElementById('tfPanel').style.display    = 'block';
+    document.getElementById('mainBtnRow').style.display = 'none';
+    renderTF();
+  } else {
+    questions  = src.slice(0, Math.min(countChoice, src.length));
+    qIndex     = 0;
+    correct    = 0;
+    wrong      = 0;
+    wrongItems = [];
+    confirmed  = false;
+    show('screenQuiz');
+    document.getElementById('blocPanel').style.display  = 'block';
+    document.getElementById('tfPanel').style.display    = 'none';
+    document.getElementById('mainBtnRow').style.display = 'flex';
+    renderQuestion();
+  }
 }
 
-// ═══════════════════════════════════════════════════
-//  CONFIRM
-// ═══════════════════════════════════════════════════
-function confirmAnswer() {
-  const q = quizQuestions[currentIndex];
-  const items = document.querySelectorAll('.option-item');
-  const cb0 = items[0].querySelector('input').checked;
-  const cb1 = items[1].querySelector('input').checked;
-  const correct0 = q[1][1];
-  const correct1 = q[2][1];
-  const isRight = (cb0 === correct0) && (cb1 === correct1);
+/* ════════════════════════════════════════════
+   EN-BLOC
+════════════════════════════════════════════ */
+function renderQuestion() {
+  confirmed = false;
+  const q   = questions[qIndex];
+  const tot = questions.length;
 
-  items.forEach((item, idx) => {
-    item.classList.add('disabled');
-    const cbChecked = item.querySelector('input').checked;
-    const shouldBe = idx === 0 ? correct0 : correct1;
-    if (cbChecked && shouldBe)       item.classList.add('correct-ans');
-    else if (cbChecked && !shouldBe) item.classList.add('wrong-ans');
-    else if (!cbChecked && shouldBe) item.classList.add('missed-ans');
+  document.getElementById('progressFill').style.width = `${(qIndex / tot) * 100}%`;
+  document.getElementById('progText').textContent     = `Otázka ${qIndex + 1} / ${tot}`;
+  document.getElementById('scoreText').innerHTML      = `✅ ${correct} &nbsp; ❌ ${wrong}`;
+  document.getElementById('qNum').textContent         = `Otázka ${qIndex + 1}`;
+  document.getElementById('qText').textContent        = q[0];
+
+  const list    = document.getElementById('choicesList');
+  list.innerHTML = '';
+  const letters  = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const choices  = shuffle(q.slice(1));
+
+  choices.forEach((ch, i) => {
+    const btn = document.createElement('button');
+    btn.className       = 'choice-btn';
+    btn.dataset.correct = ch[1];
+    btn.innerHTML       = `<span class="cb-letter">${letters[i]}</span>${ch[0]}`;
+    btn.onclick         = () => { if (!confirmed) btn.classList.toggle('selected'); };
+    list.appendChild(btn);
   });
 
-  const fb = document.getElementById('feedbackRow');
-  fb.style.display = 'flex';
-  if (isRight) {
-    score++;
-    fb.className = 'feedback-row correct';
-    fb.innerHTML = '✅ Správne! Získavaš bod.';
-  } else {
-    fb.className = 'feedback-row wrong';
-    fb.innerHTML = '❌ Nesprávne. Správne: <strong style="margin-left:6px">' +
-      q[1][0] + ': ' + (correct0 ? '✔' : '✘') + ' | ' +
-      q[2][0] + ': ' + (correct1 ? '✔' : '✘') + '</strong>';
-    wrongQuestionsThisRun.push({ q, userA: cb0, userB: cb1 });
+  document.getElementById('btnConfirm').style.display = 'inline-flex';
+  document.getElementById('btnNext').style.display    = 'none';
+}
+
+function confirmAnswer() {
+  if (confirmed) return;
+  confirmed = true;
+  const btns = document.querySelectorAll('.choice-btn');
+  let isRight = true;
+
+  btns.forEach(btn => {
+    const c   = btn.dataset.correct === 'true';
+    const sel = btn.classList.contains('selected');
+    btn.disabled = true;
+    if      ( c &&  sel) btn.classList.add('correct');
+    else if (!c && !sel) { /* ok */ }
+    else if ( c && !sel) { btn.classList.add('missed');    isRight = false; }
+    else                 { btn.classList.add('incorrect'); isRight = false; }
+  });
+
+  if (isRight) correct++;
+  else {
+    wrong++;
+    const q = questions[qIndex];
+    wrongItems.push({
+      stem: q[0],
+      choices: q.slice(1).map(c => ({ text: c[0], correct: c[1] }))
+    });
   }
 
+  document.getElementById('scoreText').innerHTML      = `✅ ${correct} &nbsp; ❌ ${wrong}`;
   document.getElementById('btnConfirm').style.display = 'none';
-  document.getElementById('btnNext').style.display = 'inline-flex';
-  updateProgress();
+  document.getElementById('btnNext').style.display    = 'inline-flex';
 }
 
-// ═══════════════════════════════════════════════════
-//  NEXT / SKIP
-// ═══════════════════════════════════════════════════
 function nextQuestion() {
-  currentIndex++;
-  updateProgress();
-  if (currentIndex >= quizQuestions.length) { showResult(); return; }
-  renderQuestion();
+  qIndex++;
+  if (qIndex >= questions.length) showResult();
+  else renderQuestion();
 }
 
 function skipQuestion() {
-  wrongQuestionsThisRun.push({ q: quizQuestions[currentIndex], userA: null, userB: null, skipped: true });
-  currentIndex++;
-  updateProgress();
-  if (currentIndex >= quizQuestions.length) { showResult(); return; }
-  renderQuestion();
+  if (mode === 'tf') return;
+  qIndex++;
+  if (qIndex >= questions.length) showResult();
+  else renderQuestion();
 }
 
-// ═══════════════════════════════════════════════════
-//  RESULT
-// ═══════════════════════════════════════════════════
+/* ════════════════════════════════════════════
+   TRUE / FALSE  –  rýchle načítanie (500 ms)
+════════════════════════════════════════════ */
+function renderTF() {
+  if (tfIdx >= tfItems.length) { showResult(); return; }
+  const item = tfItems[tfIdx];
+  const tot  = tfItems.length;
+
+  document.getElementById('progressFill').style.width = `${(tfIdx / tot) * 100}%`;
+  document.getElementById('progText').textContent     = `Tvrdenie ${tfIdx + 1} / ${tot}`;
+  document.getElementById('scoreText').innerHTML      = `✅ ${tfCorrect} &nbsp; ❌ ${tfWrong}`;
+  document.getElementById('tfStem').textContent       = item.stem;
+  document.getElementById('tfClaim').textContent      = item.claim;
+
+  const fb = document.getElementById('feedbackRowTF');
+  fb.textContent = ''; fb.className = 'feedback-row';
+
+  const cd = document.getElementById('tfCountdown');
+  cd.style.display = 'none';
+  document.getElementById('tfCountdownFill').style.transition = 'none';
+  document.getElementById('tfCountdownFill').style.width      = '100%';
+
+  const btnT = document.getElementById('tfBtnTrue');
+  const btnF = document.getElementById('tfBtnFalse');
+  btnT.disabled = false; btnT.className = 'tf-btn';
+  btnF.disabled = false; btnF.className = 'tf-btn';
+}
+
+function answerTF(answer) {
+  const btnT = document.getElementById('tfBtnTrue');
+  const btnF = document.getElementById('tfBtnFalse');
+  if (btnT.disabled) return;   // zabrání dvojkliku
+
+  const item = tfItems[tfIdx];
+  const ok   = (answer === item.correct);
+  const fb   = document.getElementById('feedbackRowTF');
+
+  btnT.disabled = true; btnF.disabled = true;
+
+  if (ok) {
+    tfCorrect++;
+    fb.textContent = '✅ Správne!';
+    fb.className   = 'feedback-row ok';
+    (answer ? btnT : btnF).classList.add('correct');
+  } else {
+    tfWrong++;
+    fb.innerHTML = `❌ Chyba! Správna odpoveď: <strong>${item.correct ? 'Pravda' : 'Nepravda'}</strong>`;
+    fb.className = 'feedback-row err';
+    (answer ? btnT : btnF).classList.add('incorrect');
+    tfWrongItems.push(item);
+  }
+
+  document.getElementById('scoreText').innerHTML = `✅ ${tfCorrect} &nbsp; ❌ ${tfWrong}`;
+
+  // Countdown bar – 500 ms
+  const cd   = document.getElementById('tfCountdown');
+  const fill = document.getElementById('tfCountdownFill');
+  cd.style.display = 'block';
+  fill.style.transition = 'none';
+  fill.style.width      = '100%';
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    fill.style.transition = 'width 0.5s linear';
+    fill.style.width      = '0%';
+  }));
+
+  tfTimer = setTimeout(() => {
+    tfIdx++;
+    renderTF();
+  }, 500);
+}
+
+/* ════════════════════════════════════════════
+   VÝSLEDOK
+════════════════════════════════════════════ */
 function showResult() {
-  const total = quizQuestions.length;
-  const pct = total ? Math.round((score / total) * 100) : 0;
+  show('screenResult');
+  let total, c, w, wItems;
+  if (mode === 'tf') {
+    total = tfItems.length; c = tfCorrect; w = tfWrong; wItems = tfWrongItems;
+  } else {
+    total = questions.length; c = correct; w = wrong; wItems = wrongItems;
+  }
 
-  lastWrongPool = wrongQuestionsThisRun.map(w => w.q);
+  const pct = total ? Math.round((c / total) * 100) : 0;
+  document.getElementById('statTotal').textContent   = total;
+  document.getElementById('statCorrect').textContent = c;
+  document.getElementById('statWrong').textContent   = w;
+  document.getElementById('ringText').textContent    = pct + '%';
 
-  let emoji, title;
-  if (pct >= 90)      { emoji = '🏆'; title = 'Výborne!'; }
-  else if (pct >= 75) { emoji = '🎉'; title = 'Veľmi dobre!'; }
-  else if (pct >= 60) { emoji = '👍'; title = 'Dobre!'; }
-  else if (pct >= 40) { emoji = '📖'; title = 'Treba ešte trochu cvičiť'; }
-  else                { emoji = '💪'; title = 'Nevzdávaj sa, skús znova!'; }
+  const ring = document.getElementById('ringFill');
+  ring.style.strokeDashoffset = 282.7 - (282.7 * pct / 100);
+  ring.style.stroke = pct >= 75 ? '#4ade80' : pct >= 50 ? '#fbbf24' : '#f87171';
+
+  let emoji = '😔', title = 'Nevzdávaj sa!';
+  if      (pct >= 90) { emoji = '🏆'; title = 'Vynikajúci výsledok!'; }
+  else if (pct >= 75) { emoji = '🎉'; title = 'Skvelá práca!'; }
+  else if (pct >= 55) { emoji = '👍'; title = 'Dobrý výsledok!'; }
+  else if (pct >= 40) { emoji = '📚'; title = 'Treba viac precvičovať.'; }
 
   document.getElementById('resultEmoji').textContent = emoji;
   document.getElementById('resultTitle').textContent = title;
-  document.getElementById('resultSub').textContent =
-    'Dosiahol/a si ' + score + ' z ' + total + ' bodov (' + pct + '%)';
-  document.getElementById('statTotal').textContent = total;
-  document.getElementById('statCorrect').textContent = score;
-  document.getElementById('statWrong').textContent = total - score;
-  document.getElementById('ringText').textContent = pct + '%';
+  document.getElementById('resultSub').textContent   =
+    `Dosiahol/a si ${pct}% (${c} z ${total} ${mode === 'tf' ? 'tvrdení' : 'otázok'})`;
 
-  const ring = document.getElementById('ringFill');
-  const circumference = 282.7;
-  ring.style.strokeDashoffset = circumference - (circumference * pct / 100);
-  ring.style.stroke = pct >= 75 ? '#4ade80' : pct >= 50 ? '#fbbf24' : '#f87171';
+  document.getElementById('btnWrongOnly').style.display =
+    wItems.length ? 'inline-flex' : 'none';
 
-  document.getElementById('progressFill').style.width = '100%';
-  document.getElementById('progressLabel').textContent = total + ' / ' + total;
-  document.getElementById('scoreBadge').textContent = '⭐ Skóre: ' + score;
-
-  // zobrazi / skryje tlacidlo "zle"
-  const btnWrong = document.getElementById('btnWrongOnly');
-  btnWrong.style.display = lastWrongPool.length > 0 ? 'inline-flex' : 'none';
-
-  // wrong list
   const wl = document.getElementById('wrongList');
-  if (wrongQuestionsThisRun.length === 0) {
-    wl.innerHTML = '<p style="color:var(--success);font-weight:700;margin-top:20px;text-align:center">🎯 Všetky otázky správne!</p>';
-  } else {
-    let html = '<h3>❌ Chybné / preskočené otázky (' + wrongQuestionsThisRun.length + ')</h3>';
-    wrongQuestionsThisRun.forEach(({ q, userA, userB, skipped }) => {
-      const c0 = q[1][1], c1 = q[2][1];
-      html += `<div class="wrong-item"><strong>${q[0]}</strong><div>`;
-      if (skipped) {
-        html += `<em style="color:var(--muted)">Preskočená</em>`;
+  wl.innerHTML = '';
+  if (wItems.length) {
+    const h = document.createElement('h3');
+    h.textContent = `Chybné ${mode === 'tf' ? 'tvrdenia' : 'otázky'} (${wItems.length}):`;
+    wl.appendChild(h);
+    wItems.forEach(item => {
+      const d = document.createElement('div');
+      d.className = 'wrong-item';
+      if (mode === 'tf') {
+        d.innerHTML = `<div class="wi-q">${item.stem}</div>
+          <div class="wi-a">${item.claim}</div>
+          <div class="wi-correct" style="margin-top:5px">
+            ✔ Správne: ${item.correct ? '✅ Pravda' : '❌ Nepravda'}
+          </div>`;
       } else {
-        const a0cls = (userA === c0) ? 'wi-correct' : 'wi-wrong';
-        const a1cls = (userB === c1) ? 'wi-correct' : 'wi-wrong';
-        html += `<span class="${a0cls}">${userA ? '☑' : '☐'} ${q[1][0]}</span> &nbsp;
-                 <span class="${a1cls}">${userB ? '☑' : '☐'} ${q[2][0]}</span>`;
+        let html = `<div class="wi-q">${item.stem}</div>`;
+        item.choices.forEach(ch => {
+          html += `<div class="${ch.correct ? 'wi-correct' : 'wi-wrong'}">
+            ${ch.correct ? '✅' : '❌'} ${ch.text}</div>`;
+        });
+        d.innerHTML = html;
       }
-      html += `</div><div style="margin-top:5px;font-size:.82rem;color:var(--success)">
-        ✔ Správne: <strong>${q[1][0]}: ${c0 ? 'ÁNO' : 'NIE'}</strong> | 
-        <strong>${q[2][0]}: ${c1 ? 'ÁNO' : 'NIE'}</strong>
-      </div></div>`;
+      wl.appendChild(d);
     });
-    wl.innerHTML = html;
   }
+}
 
-  showScreen('screenResult');
+/* ════════════════════════════════════════════
+   AKCIE PO VÝSLEDKU
+════════════════════════════════════════════ */
+function restartAll() {
+  startQuiz(shuffle(ALL_QUESTIONS));
+}
+
+function restartWrong() {
+  if (mode === 'tf') {
+    tfItems      = shuffle([...tfWrongItems]);
+    tfIdx        = 0;
+    tfCorrect    = 0;
+    tfWrong      = 0;
+    tfWrongItems = [];
+    show('screenQuiz');
+    document.getElementById('mainBtnRow').style.display = 'none';
+    renderTF();
+  } else {
+    const pool = wrongItems.map(wi =>
+      [wi.stem, ...wi.choices.map(c => [c.text, c.correct])]
+    );
+    correct    = 0;
+    wrong      = 0;
+    wrongItems = [];
+    questions  = shuffle(pool);
+    qIndex     = 0;
+    confirmed  = false;
+    show('screenQuiz');
+    document.getElementById('mainBtnRow').style.display = 'flex';
+    renderQuestion();
+  }
+}
+
+function backToMode() {
+  if (tfTimer) clearTimeout(tfTimer);
+  show('screenMode');
+  buildCountGrid();
 }
 </script>
 </body>
